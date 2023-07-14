@@ -1,0 +1,15 @@
+.TabsContainer {
+  margin: 30px 0px 0px 40px;
+  p {
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .TabsHeader {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.active {
+  color: blue;
+}

@@ -1,0 +1,42 @@
+.homepageSection{
+background-image: url('../../assets/images/top-bg.jpg');
+min-height: 100vh;
+color: white;
+padding: 70px 0;
+background-attachment: fixed;
+background-size: cover;
+
+input{
+      background: none 0 0 repeat scroll #dddddf;
+}
+
+input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: rgb(177, 177, 179);
+}
+input::-moz-placeholder { /* Firefox 19+ */
+  color: rgb(177, 177, 179);
+}
+input:-ms-input-placeholder { /* IE 10+ */
+  color: rgb(177, 177, 179);
+}
+input:-moz-placeholder { /* Firefox 18- */
+  color: rgb(177, 177, 179);
+}
+
+p{
+  color: rgb(177, 177, 179);
+
+}
+
+.brandLogo{
+  max-width: 311px;
+}
+.btn{
+  padding: 8px 30px ;
+  border: none;
+}
+
+.btn-primary{
+      background-color: #f78636;
+}
+}

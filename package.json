@@ -1,6 +1,9 @@
 {
   "name": "store-locator",
   "version": "0.1.0",
+    "engine": {
+    "node": "18.16.0"
+  },
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.7.1",

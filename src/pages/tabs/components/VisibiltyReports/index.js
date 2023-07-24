@@ -1,29 +1,55 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaEye } from 'react-icons/fa';
-import sitecard from "../../../../assets/images/site-cards.jpg";
-import bradstreet from "../../../../assets/images/dnb.jpg"
-import googlepublicadd from "../../../../assets/images/Google-Public-Add.png";
 import inprogress from "../../../../assets/images/pending.jpg";
 import submitted from "../../../../assets/images/check.jpg"
+import DeatailsCard from '../DeatailsCard';
+import axios from 'axios';
+import { useToast } from '@chakra-ui/react';
 
-export const VisibiltyReports = () => {
+export const VisibiltyReports = ({ userAvaiable }) => {
+
+  const [VisibilityData, setVisibilityData] = React.useState([]);
+
+  const toast = useToast();
+
+  useEffect(() => {
+    getdata();
+  }, []);
+
+  const getdata = () => {
+    axios.get('https://wix-store23-edef064ca37f.herokuapp.com/api/users/get_order/64a69ed35994208740aa6345/free').then((res) => {
+      console.log("dataa", res)
+      setVisibilityData(res.data);
+    }).catch((err) => {
+      console.log("error", err);
+      toast({
+        description: "Something Went Wrong",
+        title: 'Something went wrong.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    });
+  }
+
+
+  const specificImages = ["Bing", "BrownBook", "BubbleLife", "Here Live Maps", "Verizon411", "Google", "Judy's Book"]
+  const filteredData = VisibilityData?.data?.data?.progress?.filter((item) => {
+    return specificImages.includes(Object.keys(item)[0])
+  });
+
+
+
   return (
     <div>
-      <div className='card'>
-
-        <h4>Patient First Primary and Urgent Care - Abington</h4>
-        <p>Address:- 938 Old York Road, Abington PA, US 19001</p>
-        <p>Phone:- (267) 620-0237</p>
-        <p>Website:- https://www.patientfirst.com/locations/1_NTI1NTU1NzktNzE1LWxvY2F0aW9uLndlYnNpdGU%3D</p>
-        <p>Email Address:- kit12kum@gmail.com</p>
-      </div>
+      <DeatailsCard userAvaiable={userAvaiable} />
 
       <p>You're smart for signing up for our paid listing service. Your business data is now being pushed out to the most popular online local directories search engines and GPS devices! Now let us get to work.</p>
-      <h2><FaEye />Visibility report.</h2>
+      <h2><FaEye className='d-inline-block' />Visibility report.</h2>
 
       <p>The Visibility report shows is if you are listed or not on top Local Directories. Check back regularly as we will keep you posted on any directory updates.</p>
 
-      <table class="table table-borderless">
+      <table className="table table-borderless">
         <thead>
           <tr>
             <th scope="col">LISTING</th>
@@ -31,50 +57,40 @@ export const VisibiltyReports = () => {
             <th scope="col">
               VIEW LINK</th>
           </tr>
+          <div></div>
         </thead>
 
-        <tbody>
-          <tr>
-            <th >
-              <img src={sitecard} alt="" />
-            </th>
-            <td>
-              <img src={inprogress} alt="" /> inprogress
-            </td>
-            <img src={inprogress} alt="" /> inprogress
-          </tr>
-          <tr>
-            <th >
-              <img src={bradstreet} alt="" />
-            </th>
 
-            <td>
-              <img src={submitted} alt="" /> submitted
-            </td>
 
-            <td>
-              <img src={submitted} alt="" /> submitted
+        {
+          filteredData?.length > 0 && filteredData.map((item) => {
 
-            </td>
+            const imageKey = Object.keys(item)[0];
+            let imageSource = null;
 
-          </tr>
-          <tr>
-            <th>
-              <img src={googlepublicadd} alt="" />
-            </th>
-            <td >
-              <img src={submitted} alt="" /> submitted
+            try {
+              imageSource = require(`../../../../assets/images/${imageKey}.jpg`);
+            } catch (error) {
+              imageSource = require(`../../../../assets/images/${imageKey}.png`);
+            }
 
-            </td>
-            <td >
-              <img src={submitted} alt="" /> submitted
+            return <tbody key={imageKey}>
+              <tr>
+                <th>
+                  <img src={imageSource} alt="" />
+                </th>
+                <td>
+                  <img src={Object.values(item)[0].submission.comment == 'Pending' ? inprogress : submitted} alt="" /> {Object.values(item)[0].submission.comment == 'Pending' ? 'inprogress' : 'submitted'}
+                </td>
+                <img src={Object.values(item)[0].submission.urlproof ? submitted : inprogress} alt="" /> {Object.values(item)[0].submission.urlproof ? 'submitted' : 'inprogress'}
 
-            </td>
+              </tr>
+            </tbody>
+          })
+        }
 
-          </tr>
-
-        </tbody>
       </table>
+
     </div>
   )
 }

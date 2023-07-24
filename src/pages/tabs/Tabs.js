@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
-
-
-
+import React, { useEffect, useState } from 'react';
 import { BussinessDetails, BussinessHours, BussinessPhotos, Citations, ContactUs, VisibiltyReports } from './components';
 import "../../pages/tabs/Tabs.scss"
 import logo from "../../assets/images/index_logoleft.svg"
@@ -11,21 +8,25 @@ const Tabs = () => {
 
   const [activetab, setActiveTab] = useState('VisibiltyReports');
   
+  const userAvaiable = JSON.parse(localStorage.getItem('user'))
+
+
+
 
 const rendertabs = ()=>{
   switch (activetab) {
     case 'BussinessDetails':
-      return <BussinessDetails />
+      return <BussinessDetails userAvaiable={userAvaiable}  />
     case 'BussinessPhotos':
-      return <BussinessPhotos />
+      return <BussinessPhotos userAvaiable={userAvaiable} />
     case 'BussinessHours':
-      return <BussinessHours />
+      return <BussinessHours userAvaiable={userAvaiable} />
     case 'Citations':
-      return <Citations />
+      return <Citations userAvaiable={userAvaiable} />
     case 'ContactUs':
-      return <ContactUs />
+      return <ContactUs userAvaiable={userAvaiable} />
     case 'VisibiltyReports':
-      return <VisibiltyReports />
+      return <VisibiltyReports userAvaiable={userAvaiable} />
     default:
       
   }
@@ -36,7 +37,7 @@ const rendertabs = ()=>{
     <div className='TabsContainer'>
 
       <header className='TabsHeader'>
-        <img src={logo} alt="" height='60px' />
+        <img src={logo} alt="" style={{height:"60px"}}/>
       </header>
 
     <div className='row'>

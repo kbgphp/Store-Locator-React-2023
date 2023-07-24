@@ -1,4 +1,5 @@
 .homepageSection{
+
 background-image: url('../../assets/images/top-bg.jpg');
 min-height: 100vh;
 color: white;
@@ -13,19 +14,21 @@ input{
 input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: rgb(177, 177, 179);
 }
+
 input::-moz-placeholder { /* Firefox 19+ */
   color: rgb(177, 177, 179);
 }
+
 input:-ms-input-placeholder { /* IE 10+ */
   color: rgb(177, 177, 179);
 }
+
 input:-moz-placeholder { /* Firefox 18- */
   color: rgb(177, 177, 179);
 }
 
 p{
   color: rgb(177, 177, 179);
-
 }
 
 .brandLogo{
@@ -35,8 +38,44 @@ p{
   padding: 8px 30px ;
   border: none;
 }
-
 .btn-primary{
       background-color: #f78636;
 }
+h1{
+   font-style: italic ; font-weight: 600,;
+              line-height: 59px; font-size: 48px
 }
+
+.heading-peragraph{
+ font-size: 18px;
+ line-height: normal
+}
+
+.zip-messsage{
+  font-size: 11px;
+  text-align: center;
+  color: white
+}
+
+.zip-error-message{
+   max-width: 150px;
+   background: #d9534f; 
+   font-size: 12px;
+   text-align: center;
+   color: white
+}
+
+.business-error-message{
+    max-width: 200px;
+   background: #d9534f; 
+   font-size: 12px;
+   text-align: center;
+   color: white
+}
+
+.btn-primary:hover{
+background-color:#f78636;
+}
+
+}
+

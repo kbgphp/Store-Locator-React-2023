@@ -1,20 +1,133 @@
-import React from 'react'
-import { FiClock } from 'react-icons/fi'
-import './BussinessHours.scss'
+import React, { useEffect, useState } from 'react'
+import { FiClock } from 'react-icons/fi';
+import './BussinessHours.scss';
+import SelectBox from './SelectBox';
+import axios from 'axios';
+import { useToast } from '@chakra-ui/react';
+import DeatailsCard from '../DeatailsCard';
 
-export const BussinessHours = () => {
+export const BussinessHours = ({userAvaiable}) => {
+
+  
+
+  const [bussinessHoursState, setBussinessHoursState] = React.useState({
+    monday: { open: '', close: '' },
+    tuesday: { open: '', close: '' },
+    wednesday: { open: '', close: '' },
+    thursday: { open: '', close: '' },
+    friday: { open: '', close: '' },
+    saturday: { open: '', close: '' },
+    sunday: { open: '', close: '' },
+  });
+
+
+  const [loading, setLoading] = React.useState(false);
+  const [validate, setValidate] = React.useState(false)
+
+
+  const toast = useToast();
+  
+  const handleBussinessHoursChange = (e) => {
+
+  
+  
+    
+
+    const { name, value } = e.target;
+
+    const day = name.split('-')[0]; 
+    const type = name.split('-')[1]; 
+   
+    setBussinessHoursState((prev) => ({
+      ...prev,
+      [day]: { ...prev[day], [type]: value },
+    }));
+   
+    if (type === "close" && value === "closed") {
+      setValidate((prev) => ({ ...prev, [day]: true }));
+    } else {
+      setValidate((prev) => ({ ...prev, [day]: false }));
+    }
+   
+
+  };
+
+
+
+
+
+  const handleSubmitHours = async (e) =>{
+    e.preventDefault();
+
+   
+
+    await axios.post(`${process.env.REACT_APP_BASE_URL}/api/update_business_hours`,   
+      {
+        "lss_client_id": userAvaiable.lss_client_id,
+        "id": userAvaiable._id,
+        "hours": {
+          "sunday": {
+            "open": bussinessHoursState.sunday.open,
+            "close": bussinessHoursState.sunday.close
+          },
+          "monday": {
+            "open": bussinessHoursState.monday.open,
+           "close": bussinessHoursState.monday.close
+          },
+          "tuesday": {
+            "open": bussinessHoursState.tuesday.open,
+            "close": bussinessHoursState.tuesday.close
+          },
+          "wednesday": {
+            "open": bussinessHoursState.wednesday.open,
+            "close": bussinessHoursState.wednesday.close
+          },
+          "thursday": {
+            "open": bussinessHoursState.thursday.open,
+            "close": bussinessHoursState.thursday.close
+          },
+          "friday": {
+            "open": bussinessHoursState.friday.open,
+            "close": bussinessHoursState.friday.close
+          },
+          "saturday": {
+            "open": bussinessHoursState.saturday.open,
+            "close": bussinessHoursState.saturday.close
+          }
+        }
+      }
+    ).then((response) => {
+      setLoading(false);
+      if (response.data.data) {
+        toast({
+          title: 'Update Business Hours Successfull.',
+          description: "Successfully update Business Hours.",
+          status: 'success',
+          duration: 4000,
+          isClosable: true,
+        })
+      }
+    }).catch((error) => {
+      console.log("error", error);
+      setLoading(false)
+      toast({
+        title: 'Something went wrong.',
+        description: "Failed to Create.",
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      })
+    })
+   
+  }
+
+  
+
+
   return (
     <div>
-      <div className='card'>
+      <DeatailsCard userAvaiable={userAvaiable} />
 
-        <h4>Patient First Primary and Urgent Care - Abington</h4>
-        <p>Address:- 938 Old York Road, Abington PA, US 19001</p>
-        <p>Phone:- (267) 620-0237</p>
-        <p>Website:- https://www.patientfirst.com/locations/1_NTI1NTU1NzktNzE1LWxvY2F0aW9uLndlYnNpdGU%3D</p>
-        <p>Email Address:- kit12kum@gmail.com</p>
-        <hr className=' mx-5'/>
-        <p>view more</p>
-      </div>
 
       <div className='BussinessHoursText'>
         <h2><FiClock />  Business Hours.</h2>
@@ -24,11 +137,13 @@ export const BussinessHours = () => {
 
       <div className='bussinesHoursInputs'>
         <div className='row mt-4 mb-3'>
-        <div className='col-2'></div>
+          <div className='col-2'></div>
           <div className='col-5'>Open</div>
           <div className='col-5'>Close</div>
 
         </div>
+  
+
 
         <div className='row'>
           <div className='col-2'>
@@ -36,11 +151,12 @@ export const BussinessHours = () => {
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='monday-open' disabled={validate.monday} />
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill'  />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='monday-close' 
+            />
           </div>
 
         </div>
@@ -51,11 +167,13 @@ export const BussinessHours = () => {
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='tuesday-open' disabled={validate.tuesday} />
+
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='tuesday-close' />
+
           </div>
 
         </div>
@@ -66,11 +184,13 @@ export const BussinessHours = () => {
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='wednesday-open' disabled={validate.wednesday} />
+
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='wednesday-close' />
+
           </div>
 
         </div>
@@ -81,11 +201,13 @@ export const BussinessHours = () => {
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='thursday-open' disabled={validate.thursday} />
+
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+                       <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='thursday-close'/>
+
           </div>
 
         </div>
@@ -96,26 +218,30 @@ export const BussinessHours = () => {
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='friday-open' disabled={validate.friday} />
+
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+                       <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='friday-close'/>
+
           </div>
 
         </div>
 
         <div className='row mt-3'>
           <div className='col-2'>
-            Satrday
+            Saturday
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='saturday-open' disabled={validate.saturday}  />
+
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='saturday-close'/>
+
           </div>
 
         </div>
@@ -126,32 +252,22 @@ export const BussinessHours = () => {
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='sunday-open' disabled={validate.sunday} />
+
           </div>
 
           <div className='col-5'>
-            <input type='text' placeholder='Select Hour' className='rounded-pill' />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='sunday-close'/>
+
           </div>
 
         </div>
 
-       <div className='row mt-4'>
-        
-          <div class="col-4">
-         
+
+          <div className="col-12 text-end mt-4 mb-4">
+          <button className="btn btn-default orange_btn" disabled={ false} onClick={handleSubmitHours}>{loading ? ('Loading...') :('Save Changes')} </button>
           </div>
-
-          <div class="col-3">
-         
-          </div>
-
-          <div class="col-4">
-            <button class="btn btn-default orange_btn" type="submit">Save Changes</button>
-          </div>
-
-       </div>
-
-
+   
       </div>
 
     </div>

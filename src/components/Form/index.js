@@ -1,11 +1,9 @@
 import React from 'react'
 
-const Form = ({ placeholder, type, margin}) => {
+const Form = ({ placeholder, type, margin, handleChange, name, value, isValid=false }) => {
   return (
     <div class={`form-group ${margin}`}>
-      {/* <label for="exampleInputEmail1">Email address</label> */}
-      <input type={type} class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder={placeholder} />
-      {/* <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> */}
+      <input type={type} class={`form-control ${isValid ? 'is-invalid':''}`} value={value} name={name} onChange={handleChange}  placeholder={placeholder} />
     </div>
   )
 }

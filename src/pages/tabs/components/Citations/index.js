@@ -1,16 +1,11 @@
 import React from 'react'
+import DeatailsCard from '../DeatailsCard'
 
-export const Citations =   () => {
+export const Citations = ({ userAvaiable }) => {
   return (
     <div>
-      <div className='card'>
+      <DeatailsCard userAvaiable={userAvaiable} />
 
-        <h4>Patient First Primary and Urgent Care - Abington</h4>
-        <p>Address:- 938 Old York Road, Abington PA, US 19001</p>
-        <p>Phone:- (267) 620-0237</p>
-        <p>Website:- https://www.patientfirst.com/locations/1_NTI1NTU1NzktNzE1LWxvY2F0aW9uLndlYnNpdGU%3D</p>
-        <p>Email Address:- kit12kum@gmail.com</p>
-      </div>
 
       <div>
         <h1>Citations</h1>
@@ -18,7 +13,7 @@ export const Citations =   () => {
       </div>
 
       <div className='CitationTable'>
-        <table class="table table-borderless">
+        <table className="table table-borderless">
           <thead>
             <tr>
 

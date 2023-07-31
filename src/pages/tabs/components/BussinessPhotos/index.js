@@ -8,6 +8,7 @@ export const BussinessPhotos = ({ userAvaiable }) => {
 
   const [base64Image, setBase64Image] = React.useState('');
   const accesstoken = JSON.parse(localStorage.getItem('access_token'));
+  console.log("accesstoken", accesstoken)
   const user = JSON.parse(localStorage.getItem('user'));
   console.log("userr", user._id)
 // const accesstoken = 'toknee';

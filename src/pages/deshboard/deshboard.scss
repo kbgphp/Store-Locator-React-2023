@@ -4,7 +4,6 @@ h1{
   font-size: 30px;
     font-style: italic;
     font-weight: bold;
-    font-family: "Lato", sans-serif;
     // padding: 20px 0;
   }
 
@@ -21,3 +20,28 @@ color: #ffffff
 .Stepactive{
 background-color: #E77938;
 }
+.stepProcessbar .deviders {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.stepProcessbar .deviders:nth-child(2) {
+    border-right: 1px solid #e7793847;
+    border-left: 1px solid #e7793847;
+}
+.deshboardBtnGroup button {
+    width: 200px;
+}
+
+// .required { 
+//   position: relative;
+// }
+// .required:before {
+//     content: "*";
+//     position: absolute;
+//     color: red;
+//     top: 0;
+//     font-size: 22px;
+//     line-height: 48px;
+//     right: 15px;
+// }

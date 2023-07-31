@@ -1,7 +1,8 @@
-import React from 'react'
-import DeatailsCard from '../DeatailsCard';
+import React from "react";
 import { Line } from 'react-chartjs-2';
-import Chart  from './Chart';
+
+
+
 
 const data = {
   labels: [
@@ -15,7 +16,7 @@ const data = {
     "YelloYello",
     "iBegin",
     "Here Live Maps",
-
+   
   ],
   datasets: [
     {
@@ -37,7 +38,7 @@ const data = {
       pointHoverBorderWidth: 2,
       pointRadius: 1,
       pointHitRadius: 10,
-      data: [100, 80, 150, 200, 190, 210, 170, 190, 220, 200]
+      data: [100, 80,  150, 200, 190, 210, 170, 190, 220, 200]
     },
     {
       label: "Visit Trend (No Season)",
@@ -63,54 +64,19 @@ const data = {
   ]
 };
 
-
-export const Citations = ({ userAvaiable }) => {
+function Chart() {
   return (
-    <div>
-      <DeatailsCard userAvaiable={userAvaiable} />
-
-
-      <div>
-        <h1>Citations</h1>
-        <p>The Citations reports shows you where your Name , Address are #are listed across the web. it's important to have  many Citations as Google uses these as  trust signals.</p>
-      </div>
-
-      <Chart/>
-
-
-      <div className='CitationTable'>
-        <table className="table table-borderless">
-          <thead>
-            <tr>
-
-              <th scope="col">LISTING</th>
-              <th scope="col">STATUS</th>
-              <th scope="col">
-                VIEW LINK</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th >1</th>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th >2</th>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
-            </tr>
-          </tbody>
-        </table>
+    <div className="mt-4">
+      <h2>Citations chart </h2>
+      <div className="mb-4">
+      <Line data={data} 
+      // width={100} 
+      height={80} 
+      />
 
       </div>
-
     </div>
-  )
+  );
 }
 
-
+export default Chart;

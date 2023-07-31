@@ -5,6 +5,13 @@
     font-weight: 600;
     font-size: 24px;
   }
+
+.formHeadings{
+  border-bottom: 1px solid #eee;
+  margin-bottom: 25px;
+  padding-bottom: 5px;
+}
+
   p{
     color: #484848;
     line-height: 17px;
@@ -29,4 +36,7 @@
     font-weight: bold;
     float: right;
   }
+  textarea.form-control { 
+    height: 176px;
+}
 }

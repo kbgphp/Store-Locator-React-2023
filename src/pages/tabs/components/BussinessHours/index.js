@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FiClock } from 'react-icons/fi';
 import './BussinessHours.scss';
 import SelectBox from './SelectBox';
@@ -6,11 +6,11 @@ import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
 import DeatailsCard from '../DeatailsCard';
 
-export const BussinessHours = ({userAvaiable}) => {
+export const BussinessHours = ({ userAvaiable }) => {
 
-  
 
-  const [bussinessHoursState, setBussinessHoursState] = React.useState({
+
+  const [bussinessHoursState, setBussinessHoursState] = useState({
     monday: { open: '', close: '' },
     tuesday: { open: '', close: '' },
     wednesday: { open: '', close: '' },
@@ -21,34 +21,34 @@ export const BussinessHours = ({userAvaiable}) => {
   });
 
 
-  const [loading, setLoading] = React.useState(false);
-  const [validate, setValidate] = React.useState(false)
+  const [loading, setLoading] = useState(false);
+  const [validate, setValidate] = useState(false)
 
 
   const toast = useToast();
-  
+
   const handleBussinessHoursChange = (e) => {
 
-  
-  
-    
+
+
+
 
     const { name, value } = e.target;
 
-    const day = name.split('-')[0]; 
-    const type = name.split('-')[1]; 
-   
+    const day = name.split('-')[0];
+    const type = name.split('-')[1];
+
     setBussinessHoursState((prev) => ({
       ...prev,
       [day]: { ...prev[day], [type]: value },
     }));
-   
+
     if (type === "close" && value === "closed") {
       setValidate((prev) => ({ ...prev, [day]: true }));
     } else {
       setValidate((prev) => ({ ...prev, [day]: false }));
     }
-   
+
 
   };
 
@@ -56,12 +56,27 @@ export const BussinessHours = ({userAvaiable}) => {
 
 
 
-  const handleSubmitHours = async (e) =>{
+  const handleSubmitHours = async (e) => {
     e.preventDefault();
 
-   
+  
 
-    await axios.post(`${process.env.REACT_APP_BASE_URL}/api/update_business_hours`,   
+    if (!bussinessHoursState.monday.open || !bussinessHoursState.thursday.open || !bussinessHoursState.monday.close ||
+      !bussinessHoursState.thursday.close || !bussinessHoursState.tuesday.open || !bussinessHoursState.tuesday.close ||
+      !bussinessHoursState.wednesday.open || !bussinessHoursState.wednesday.close || !bussinessHoursState.friday.open ||
+      !bussinessHoursState.saturday.open || !bussinessHoursState.saturday.close || !bussinessHoursState.sunday.open || !bussinessHoursState.sunday.close
+      ){
+      toast({
+        title: 'All Field Menditory',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
+      return
+      }
+
+    setLoading(true);
+    await axios.post(`${process.env.REACT_APP_BASE_URL}/api/update_business_hours`,
       {
         "lss_client_id": userAvaiable.lss_client_id,
         "id": userAvaiable._id,
@@ -72,7 +87,7 @@ export const BussinessHours = ({userAvaiable}) => {
           },
           "monday": {
             "open": bussinessHoursState.monday.open,
-           "close": bussinessHoursState.monday.close
+            "close": bussinessHoursState.monday.close
           },
           "tuesday": {
             "open": bussinessHoursState.tuesday.open,
@@ -118,10 +133,10 @@ export const BussinessHours = ({userAvaiable}) => {
         isClosable: true,
       })
     })
-   
+
   }
 
-  
+
 
 
   return (
@@ -130,7 +145,7 @@ export const BussinessHours = ({userAvaiable}) => {
 
 
       <div className='BussinessHoursText'>
-        <h2><FiClock />  Business Hours.</h2>
+        <h2><FiClock style={{ display: "inline-block" }} />  Business Hours.</h2>
         <p>Adding business hours helps customers know when you are open when they search and find your business on various local directories. You have to add business hours for each day to submit it. Select closed if there is no business hours. </p>
       </div>
 
@@ -142,7 +157,7 @@ export const BussinessHours = ({userAvaiable}) => {
           <div className='col-5'>Close</div>
 
         </div>
-  
+
 
 
         <div className='row'>
@@ -155,7 +170,7 @@ export const BussinessHours = ({userAvaiable}) => {
           </div>
 
           <div className='col-5'>
-            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='monday-close' 
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='monday-close'
             />
           </div>
 
@@ -206,7 +221,7 @@ export const BussinessHours = ({userAvaiable}) => {
           </div>
 
           <div className='col-5'>
-                       <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='thursday-close'/>
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='thursday-close' />
 
           </div>
 
@@ -223,7 +238,7 @@ export const BussinessHours = ({userAvaiable}) => {
           </div>
 
           <div className='col-5'>
-                       <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='friday-close'/>
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='friday-close' />
 
           </div>
 
@@ -235,13 +250,12 @@ export const BussinessHours = ({userAvaiable}) => {
           </div>
 
           <div className='col-5'>
-            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='saturday-open' disabled={validate.saturday}  />
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='saturday-open' disabled={validate.saturday} />
 
           </div>
 
           <div className='col-5'>
-            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='saturday-close'/>
-
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='saturday-close' />
           </div>
 
         </div>
@@ -257,17 +271,17 @@ export const BussinessHours = ({userAvaiable}) => {
           </div>
 
           <div className='col-5'>
-            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='sunday-close'/>
+            <SelectBox handleBussinessHoursChange={handleBussinessHoursChange} name='sunday-close' />
 
           </div>
 
         </div>
 
 
-          <div className="col-12 text-end mt-4 mb-4">
-          <button className="btn btn-default orange_btn" disabled={ false} onClick={handleSubmitHours}>{loading ? ('Loading...') :('Save Changes')} </button>
-          </div>
-   
+        <div className="col-12 text-end mt-4 mb-4">
+          <button className="btn btn-primary " disabled={false} onClick={handleSubmitHours}>{loading ? ('Loading...') : ('Save Changes')} </button>
+        </div>
+
       </div>
 
     </div>

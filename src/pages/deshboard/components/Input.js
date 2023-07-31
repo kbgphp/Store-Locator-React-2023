@@ -7,7 +7,7 @@ function Input({ placeholder, actas, onChangeHandler, name, value, handleZipCode
   return (
 
  
-      <Form.Group as={actas} md="4" controlId="validationCustom01">
+      <Form.Group as={actas} md="4" className='required' controlId="validationCustom01">
           <Form.Control
          
           type="text"

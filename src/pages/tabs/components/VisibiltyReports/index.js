@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react'
 import { FaEye } from 'react-icons/fa';
+import Loader from '../../../../components/Loader';
 import inprogress from "../../../../assets/images/pending.jpg";
 import submitted from "../../../../assets/images/check.jpg"
 import DeatailsCard from '../DeatailsCard';
 import axios from 'axios';
+import "./VisibiltyReports.scss"
 import { useToast } from '@chakra-ui/react';
 
 export const VisibiltyReports = ({ userAvaiable }) => {
 
   const [VisibilityData, setVisibilityData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false)
 
   const toast = useToast();
 
@@ -17,11 +20,21 @@ export const VisibiltyReports = ({ userAvaiable }) => {
   }, []);
 
   const getdata = () => {
-    axios.get('https://wix-store23-edef064ca37f.herokuapp.com/api/users/get_order/64a69ed35994208740aa6345/free').then((res) => {
-      console.log("dataa", res)
+    setLoading(true)
+    let config = {
+      headers: {
+        'x-auth-token': "@W#I$X7jlk8!%*dd%4",
+      }
+    }
+
+
+    axios.get('https://wix-store23-edef064ca37f.herokuapp.com/api/users/get_order/64a69ed35994208740aa6345/free', config).then((res) => {
       setVisibilityData(res.data);
+      setLoading(false)
+
     }).catch((err) => {
       console.log("error", err);
+      setLoading(false)
       toast({
         description: "Something Went Wrong",
         title: 'Something went wrong.',
@@ -39,60 +52,71 @@ export const VisibiltyReports = ({ userAvaiable }) => {
   });
 
 
-
   return (
+
     <div>
       <DeatailsCard userAvaiable={userAvaiable} />
 
       <p>You're smart for signing up for our paid listing service. Your business data is now being pushed out to the most popular online local directories search engines and GPS devices! Now let us get to work.</p>
-      <h2><FaEye className='d-inline-block' />Visibility report.</h2>
+      <h3 className='mb-4 fw-bolder font-italic'><FaEye className='d-inline-block me-2' />Visibility report.</h3>
 
-      <p>The Visibility report shows is if you are listed or not on top Local Directories. Check back regularly as we will keep you posted on any directory updates.</p>
+      <p className='validationInfo mb-4'>The Visibility report shows is if you are listed or not on top Local Directories. Check back regularly as we will keep you posted on any directory updates.</p>
 
-      <table className="table table-borderless">
-        <thead>
-          <tr>
-            <th scope="col">LISTING</th>
-            <th scope="col">STATUS</th>
-            <th scope="col">
-              VIEW LINK</th>
-          </tr>
-          <div></div>
-        </thead>
+      <table className="table table-borderless align-middle tableStatusList">
+      <thead>
+        <tr>
+          <th scope="col">LISTING</th>
+          <th scope="col">STATUS</th>
+          <th scope="col">
+            VIEW LINK</th>
+        </tr>
+        <div></div>
+      </thead>
+
+{
+        loading ? <Loader /> :
+        <>
+           
+              {
+                filteredData?.length > 0 && filteredData.map((item) => {
+
+                  const imageKey = Object.keys(item)[0];
+                  let imageSource = null;
+
+                  try {
+                    imageSource = require(`../../../../assets/images/${imageKey}.jpg`);
+                  } catch (error) {
+                    imageSource = require(`../../../../assets/images/${imageKey}.png`);
+                  }
+                  return <tbody>
+                    <tr>
+                      <th >
+                        <img src={imageSource} alt="" className='tableStatusLogo' />
+                      </th>
+                      <td>
+                        <img className='tableStatusIcon' src={Object.values(item)[0].submission.comment == 'Pending' ? inprogress : submitted} alt="" /> {Object.values(item)[0].submission.comment == 'Pending' ? 'inprogress' : 'submitted'}
+                      </td>
+                      <img className='tableStatusIcon' src={Object.values(item)[0].submission.urlproof ? submitted : inprogress} alt="" /> {Object.values(item)[0].submission.urlproof ? 'submitted' : 'inprogress'}
+                    </tr>
+                  </tbody>
+
+
+                })
+              }
 
 
 
-        {
-          filteredData?.length > 0 && filteredData.map((item) => {
-
-            const imageKey = Object.keys(item)[0];
-            let imageSource = null;
-
-            try {
-              imageSource = require(`../../../../assets/images/${imageKey}.jpg`);
-            } catch (error) {
-              imageSource = require(`../../../../assets/images/${imageKey}.png`);
-            }
-
-            return <tbody key={imageKey}>
-              <tr>
-                <th>
-                  <img src={imageSource} alt="" />
-                </th>
-                <td>
-                  <img src={Object.values(item)[0].submission.comment == 'Pending' ? inprogress : submitted} alt="" /> {Object.values(item)[0].submission.comment == 'Pending' ? 'inprogress' : 'submitted'}
-                </td>
-                <img src={Object.values(item)[0].submission.urlproof ? submitted : inprogress} alt="" /> {Object.values(item)[0].submission.urlproof ? 'submitted' : 'inprogress'}
-
-              </tr>
-            </tbody>
-          })
-        }
-
+        </>
+        
+        
+}
       </table>
+
+
+     
+
 
     </div>
   )
 }
-
 

@@ -2,15 +2,28 @@
   margin: 30px 0px 0px 40px;
   p {
     cursor: pointer;
-    font-size: 16px;
   }
   .TabsHeader {
     padding-left: 260px;
     margin-bottom: 30px;
 
   }
+  .asidbarTabs p{
+    font-size: 16px;
+  }
 }
 
 .active {
   color: blue;
+}
+ul.asidbarTabs {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    a{
+      padding: 16px 0;
+    display: block;
+    font-weight: 600;
+    cursor: pointer;
+    }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Form, InputGroup, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 import { IoIosBusiness } from 'react-icons/io';
 import { FaInfoCircle } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
@@ -23,7 +23,8 @@ const Deshboard = () => {
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(false)
   const [active, setActive] = useState(null);
-  const [validated, setValidated] = useState(false)
+  const [validated, setValidated] = useState(false);
+  console.log("validated",validated)
   const [bussinessDetails, setBussinessDetails] = useState({
     business_name: '',
     business_address: '',
@@ -43,8 +44,9 @@ const Deshboard = () => {
     lss_id: '',
     keywords: ''
   });
-  const [message, setMessage] = useState('');
+  console.log("fghj", bussinessDetails)
   
+
   useEffect(() => {
     setCardData(location.state.apiData);
   }, [location.state])
@@ -79,7 +81,7 @@ const Deshboard = () => {
         contact_phone_number: bussinessDetails.contact_number,
         notes: bussinessDetails.business_comments
       }).then((response) => {
-        console.log("res",response.data)
+        console.log("res", response.data)
         setLoading(false);
         if (response?.data?.data[0] && response?.data?.data[0].message !== '') {
           toast({
@@ -123,32 +125,13 @@ const Deshboard = () => {
     });
   }
 
-  const isEmailValid = (email) => {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-  };
 
   const onChangeHandler = (event) => {
 
     const { name, value } = event.target;
 
-    if (name === 'business_email') {
-      const isValidEmail = isEmailValid(value);
-      setBussinessDetails((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-      setValidated((prev) => ({
-        ...prev,
-        business_email: !isValidEmail,
-      }));
-      if (!isValidEmail) {
-        setMessage('Please enter a valid email address.');
-      } else {
-        setMessage('');
-      }
-    }
-    else if (name === 'business_country') {
+  
+    if (name === 'business_country') {
       setBussinessDetails((prev) => ({
         ...prev,
         business_country: { country: value, code: prev.business_country.code },
@@ -195,12 +178,12 @@ const Deshboard = () => {
 
           <Col xs={12}>
             <div className='brandLogo'>
-              <img src={index_logo} width='27%' />
+              <img src={index_logo} width='27%' alt='brandlogo' />
             </div>
           </Col>
 
           <Col xs={12} className='mt-4 mb-4'>
-            <div className='d-flex rounded-pill w-100' style={{ backgroundColor: '#F7D8A0', overflow: "hidden" }}>
+            <div className='stepProcessbar d-flex rounded-pill w-100' style={{ backgroundColor: '#F7D8A0', overflow: "hidden" }}>
               <div className="deviders Stepactive p-3" >1.Verify Business Information</div>
               <div className="deviders p-2">2.Free Directory Submission</div>
               <div className="deviders p-2">3.Upgrade</div>
@@ -224,7 +207,7 @@ const Deshboard = () => {
                 </Col>
               })
               :
-              <p style={{marginBottom: "40px" }}
+              <p style={{ marginBottom: "40px" }}
                 className='text-primary'
               >We weren't able to locate your business.Please enter your details below</p>
           }
@@ -234,6 +217,7 @@ const Deshboard = () => {
               <h3> <IoIosBusiness style={{ display: "inline-block" }} />Business Details.</h3>
 
               <Input placeholder={"Business name"} actas={Row} name='business_name'
+           
                 value={bussinessDetails.business_name}
                 onChangeHandler={onChangeHandler}
                 isInvalid={validated && !bussinessDetails.business_name && true}
@@ -285,17 +269,14 @@ const Deshboard = () => {
               <Input placeholder={"Business phone number"} name='business_phone'
                 isInvalid={validated && !bussinessDetails.business_phone && true}
                 value={bussinessDetails.business_phone} actas={Row} onChangeHandler={onChangeHandler} />
+
               <Input placeholder={"Website URL"} name='website_url'
                 isInvalid={validated && !bussinessDetails.website_url && true}
-
                 actas={Row} value={bussinessDetails.website_url} onChangeHandler={onChangeHandler} />
+
               <Input placeholder={"Enter you business email"}
                 isInvalid={validated && !bussinessDetails.business_email && true}
                 name='business_email' actas={Row} value={bussinessDetails.business_email} onChangeHandler={onChangeHandler} />
-              {validated.business_email && message && (
-                <Form.Text className="text-danger">{message}</Form.Text>
-              )}
-
             </Col>
 
 
@@ -329,22 +310,25 @@ const Deshboard = () => {
 
                 value={bussinessDetails.business_catrgory} actas={Row} name='business_catrgory' onChangeHandler={onChangeHandler} />
 
-              <Form.Control
-                md="4"
-                as="textarea"
-                placeholder="Leave a comment here"
-                className='rounded'
-                style={{ height: '100px' }}
-                name='business_comments'
-                value={bussinessDetails.business_comments}
-                onChange={onChangeHandler}
-                isInvalid={validated && !bussinessDetails.business_comments && true}
-              >
-              </Form.Control>
 
-              <div className='d-flex flex-row-reverse gap-3' >
-                <button className='btn btn-primary rounded-pill'>Reset</button>
-                <button className='btn btn-danger rounded-pill' type="submit">
+              <div class="row row-cols-md-4">
+                <Form.Control
+                  md="4"
+                  as="textarea"
+                  placeholder="Leave a comment here"
+                  style={{ height: '100px' }}
+                  name='business_comments'
+                  value={bussinessDetails.business_comments}
+                  onChange={onChangeHandler}
+                  isInvalid={validated && !bussinessDetails.business_comments && true}
+                >
+                </Form.Control>
+              </div>
+
+
+              <div className='d-flex justify-content-end gap-3 deshboardBtnGroup' >
+                <button className='btn btn-secondary rounded-pill'>Reset</button>
+                <button className='btn btn-primary rounded-pill' type="submit">
                   {loading ? ('Loading...') : ('Get Listed!')}
                 </button>
               </div>

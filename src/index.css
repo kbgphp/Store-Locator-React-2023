@@ -1,0 +1,118 @@
+body{
+  font-family: 'latoregular';
+  font-size: '14px';
+}
+p {
+    margin-bottom:10px;
+    line-height: 17px;
+    font-size: 14px;
+    color: #484848;
+}
+@font-face {
+    font-family: 'latobold';
+    src: url('./assets/fonts/lato-bold-webfont.woff2') format('woff2'),
+         url('./assets/fonts/lato-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'latobold_italic';
+    src: url('./assets/fonts/lato-bolditalic-webfont.woff2') format('woff2'),
+         url('./assets/fonts/lato-bolditalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'latoitalic';
+    src: url('./assets/fonts/lato-italic-webfont.woff2') format('woff2'),
+         url('./assets/fonts/lato-italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'latolight';
+    src: url('./assets/fonts/lato-light-webfont.woff2') format('woff2'),
+         url('./assets/fonts/lato-light-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'latolight_italic';
+    src: url('./assets/fonts/lato-lightitalic-webfont.woff2') format('woff2'),
+         url('./assets/fonts/lato-lightitalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'latoregular';
+    src: url('./assets/fonts/lato-regular-webfont.woff2') format('woff2'),
+         url('./assets/fonts/lato-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.btn{
+  padding: 10px 30px;
+  border-radius: 50px;
+}
+.h2, h2 {
+    font-size: 30px;
+}
+.h3, h3 {
+    font-size: 24px;
+}
+.h4, h4 {
+    font-size: 18px;
+}
+ 
+.btn-primary{
+background-color: #f78636;
+border-color: #f78636;
+}
+.btn-secondary{
+  background-color: #C3C3C3;
+  border-color: #C3C3C3;
+}
+.btn-primary:hover{
+background-color: #f78636;
+border-color: #f78636;
+}
+.btn-secondary:hover{
+  border-color:#C3C3C3;
+  background-color: #C3C3C3;
+}
+.form-control{
+  border: #ddd solid 2px;
+    color: #555555;
+    border-radius: 20px;
+    font-size: 14px;
+}
+.form-control:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
+.form-control::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #999;
+}
+.form-control::-moz-placeholder { /* Firefox 19+ */
+  color: #999;
+}
+.form-control:-ms-input-placeholder { /* IE 10+ */
+  color: #999;
+}
+.form-control:-moz-placeholder { /* Firefox 18- */
+  color: #999;
+}
+.validationInfo{
+  color: #000;
+}
+.font-italic{
+  font-style: italic;
+}

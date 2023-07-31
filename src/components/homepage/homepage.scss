@@ -57,25 +57,22 @@ h1{
   color: white
 }
 
-.zip-error-message{
-   max-width: 150px;
-   background: #d9534f; 
-   font-size: 12px;
-   text-align: center;
-   color: white
-}
-
-.business-error-message{
+.error-message{
     max-width: 200px;
    background: #d9534f; 
    font-size: 12px;
    text-align: center;
-   color: white
+   color: white;
+   padding: 4px 7px;
+    border-radius: 2px;
 }
 
 .btn-primary:hover{
 background-color:#f78636;
 }
+
+
+
 
 }
 

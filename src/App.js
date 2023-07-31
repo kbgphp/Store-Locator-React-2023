@@ -3,6 +3,7 @@ import Homepage from "./components/homepage/Homepage";
 import Layout from "./components/Layout/Layout";
 import Tabs from "./pages/tabs/Tabs";
 import Deshboard from "./pages/deshboard";
+import Auth from "./pages/Authorization";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/deshboard" element={<Deshboard />} />
+        <Route path="/Auth" element={<Auth />} />
         <Route element={<Layout />} >
           <Route path="/tabs" element={<Tabs/>} />
         </Route>

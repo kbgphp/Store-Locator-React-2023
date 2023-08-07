@@ -12,31 +12,21 @@
   padding-bottom: 5px;
 }
 
-  p{
-    color: #484848;
-    line-height: 17px;
-    font-weight: 400 !important;
-  }
-
+ 
   button{
-        background-color: #f78636;
-    border: none;
-    border-radius: 20px;
+    border-radius: 50px;
     color: #fff;
-    height: 38px;
-    margin: 0 0 0 3px;
-    width: 200px;
-    color: #fff;
-    font-family: 'Lato', sans-serif;
-    font-size: 14px;
-    text-align: center;
-    padding: 0;
     margin: 0;
-    outline: none;
-    font-weight: bold;
+    width: 100%;
+    text-align: center;
     float: right;
   }
   textarea.form-control { 
     height: 176px;
 }
+// .contactustextBlock {
+//     display: flex;
+//     align-items: center;
+//     height: 100%;
+// }
 }

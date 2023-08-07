@@ -24,8 +24,14 @@ const Deshboard = () => {
   const [loading, setLoading] = useState(false)
   const [active, setActive] = useState(null);
   const [validated, setValidated] = useState(false);
-  console.log("validated",validated)
-  const [bussinessDetails, setBussinessDetails] = useState({
+  const [emailValid, setEmailValid] = useState(true);
+  const [zipcodeError, setZipcodeError] = useState('');
+  const [contactemailValid, setcontactEmailValid] = useState(true);
+  const [contactNumberError, setContactNumberError] = useState('');
+  const [businessNumberError, setBusinessNumberError] = useState('')
+
+
+  const [businessDetails, setBusinessDetails] = useState({
     business_name: '',
     business_address: '',
     business_city: '',
@@ -44,8 +50,9 @@ const Deshboard = () => {
     lss_id: '',
     keywords: ''
   });
-  console.log("fghj", bussinessDetails)
-  
+ 
+  const InstanceId = JSON.parse(localStorage.getItem('instance_id'))
+
 
   useEffect(() => {
     setCardData(location.state.apiData);
@@ -53,33 +60,34 @@ const Deshboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!bussinessDetails.business_name || !bussinessDetails.business_address ||
-      !bussinessDetails.business_city || !bussinessDetails.business_zipcode ||
-      !bussinessDetails.business_country.country ||
-      !bussinessDetails.business_state.state || !bussinessDetails.business_phone
-      || !bussinessDetails.website_url || !bussinessDetails.business_email
-      || !bussinessDetails.business_catrgory) {
+    if (!businessDetails.business_name || !businessDetails.business_address ||
+      !businessDetails.business_city || !businessDetails.business_zipcode ||
+      !businessDetails.business_country.country ||
+      !businessDetails.business_state.state || !businessDetails.business_phone
+      || !businessDetails.website_url || !businessDetails.business_email
+      || !businessDetails.business_catrgory) {
       setValidated(true)
       return;
     } else {
       setLoading(true)
       await axios.post('https://wix-store23-edef064ca37f.herokuapp.com/api/users/save', {
-        name: bussinessDetails.business_name,
-        city: bussinessDetails.business_city,
-        street: bussinessDetails.business_address,
-        state: bussinessDetails.business_state.code,
-        zipcode: bussinessDetails.business_zipcode,
-        phone: bussinessDetails.business_phone,
-        email: bussinessDetails.business_email,
-        website: bussinessDetails.website_url,
-        country: bussinessDetails.business_country.code,
-        owner: bussinessDetails.contact_firstname + bussinessDetails.contact_lastname,
-        keyword1: bussinessDetails.business_catrgory,
-        contact_first_name: bussinessDetails.contact_firstname,
-        contact_last_name: bussinessDetails.contact_lastname,
-        contact_email: bussinessDetails.contact_email,
-        contact_phone_number: bussinessDetails.contact_number,
-        notes: bussinessDetails.business_comments
+        name: businessDetails.business_name,
+        city: businessDetails.business_city,
+        street: businessDetails.business_address,
+        state: businessDetails.business_state.code,
+        zipcode: businessDetails.business_zipcode,
+        phone: businessDetails.business_phone,
+        email: businessDetails.business_email,
+        website: businessDetails.website_url,
+        country: businessDetails.business_country.code,
+        owner: businessDetails.contact_firstname + businessDetails.contact_lastname,
+        keyword1: businessDetails.business_catrgory,
+        contact_first_name: businessDetails.contact_firstname,
+        contact_last_name: businessDetails.contact_lastname,
+        contact_email: businessDetails.contact_email,
+        contact_phone_number: businessDetails.contact_number,
+        notes: businessDetails.business_comments,
+        instance_id: InstanceId
       }).then((response) => {
         console.log("res", response.data)
         setLoading(false);
@@ -111,8 +119,10 @@ const Deshboard = () => {
 
   const handleFormFill = (data) => {
     setActive(data);
-    setValidated(false)
-    setBussinessDetails({
+    setValidated(false);
+    setEmailValid(true);
+    setcontactEmailValid(true)
+    setBusinessDetails({
       business_name: data.business_name ? data.business_name : '', business_city: data.city ? data.city : '', business_country: { country: data.country ? data.country : '', code: data.country ? data.country : '' }, business_state: { state: data.state ? data.state : '', code: data.state ? data.state : '' }, business_address: data.street
         ? data.street : '', business_zipcode: data.zipcode ? data.zipcode : '', business_phone: data.phone ? data.phone : '', lss_id
         : data.place_id ? data.place_id : '', keywords: data.keywords ? data.keywords : '',
@@ -126,34 +136,140 @@ const Deshboard = () => {
   }
 
 
+  // const onChangeHandler = (event) => {
+
+  //   const { name, value } = event.target;
+
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  //   if (name === 'business_email') {
+  //     setEmailValid(emailRegex.test(value));
+  //   }
+  //   if (name === 'contact_email'){
+  //     setcontactEmailValid(emailRegex.test(value));
+  //   }
+
+  //   if (name === 'contact_number' && value.length > 10) {
+  //     setContactNumberError('Contact number should not exceed 10 characters.');
+  //   } else {
+      
+  //     setContactNumberError('');
+  //   }
+
+  //   if (name === 'business_phone') {
+  //     console.log("reached every only business here>>")
+
+  //     setBusinessNumberError('number should not exceed 10 characters.');
+  //   } else {
+  //     setBusinessNumberError('');
+  //   }
+
+
+  //   if (name === 'business_country') {
+  //     setBusinessDetails((prev) => ({
+  //       ...prev,
+  //       business_country: { country: value, code: prev.business_country.code },
+  //     }));
+  //   } else if (name === 'business_state') {
+  //     setBusinessDetails((prev) => ({
+  //       ...prev,
+  //       business_state: { country: value, code: prev.business_state.code },
+  //     }));
+  //   }
+  //   else {
+  //     console.log("reached every time here>>")
+  //     setBusinessDetails((prev) => ({
+  //       ...prev,
+  //       [name]: value,
+  //     }));
+  //   }
+
+   
+  // }
+
   const onChangeHandler = (event) => {
-
     const { name, value } = event.target;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  
-    if (name === 'business_country') {
-      setBussinessDetails((prev) => ({
-        ...prev,
-        business_country: { country: value, code: prev.business_country.code },
-      }));
-    } else if (name === 'business_state') {
-      setBussinessDetails((prev) => ({
-        ...prev,
-        business_state: { country: value, code: prev.business_state.code },
-      }));
-    }
-    else {
-      setBussinessDetails((prev) => ({
+    if (name === 'business_email') {
+      setEmailValid(emailRegex.test(value));
+      setBusinessDetails((prev) => ({
         ...prev,
         [name]: value,
       }));
+
+    } else if (name === 'contact_email') {
+      setcontactEmailValid(emailRegex.test(value));
+      setBusinessDetails((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else if (name === 'contact_number' && value.length > 17) {
+      setContactNumberError('Contact number should not exceed 10 characters.');
+      setBusinessDetails((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+
+    } else if (name === 'business_phone' && value.length > 17) {
+      setBusinessNumberError('Number should not exceed 10 characters.');
+      setBusinessDetails((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else {
+      setBusinessNumberError(''); 
+      setContactNumberError(''); 
+
+      if (name === 'business_country') {
+        setBusinessDetails((prev) => ({
+          ...prev,
+          business_country: { country: value, code: prev.business_country.code },
+        }));
+      } else if (name === 'business_state') {
+        setBusinessDetails((prev) => ({
+          ...prev,
+          business_state: { country: value, code: prev.business_state.code },
+        }));
+      } else if (name === 'business_phone'){
+        const re = /(\d{3})(\d{3})(\d{4})/;
+        const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
+        setBusinessDetails((prev) => ({
+          ...prev,
+          [name]: output,
+        }));
+      } else if (name === 'contact_number') {
+        const re = /(\d{3})(\d{3})(\d{4})/;
+        const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
+        setBusinessDetails((prev) => ({
+          ...prev,
+          [name]: output,
+        }));
+      } else {
+        setBusinessDetails((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
     }
-  }
+  };
+
+
+
+
+
 
   const handleZipCode = async (event) => {
     const { name, value } = event.target;
 
-    setBussinessDetails((prev) => ({
+    if (value.length > 5) {
+      setZipcodeError('Zipcode should not exceed 5 characters.');
+    } else {
+      setZipcodeError('');
+    }
+
+
+    setBusinessDetails((prev) => ({
       ...prev, [name]: value
     }));
 
@@ -161,12 +277,43 @@ const Deshboard = () => {
       const response = await fetch(`https://api.zippopotam.us/us/${value}`);
       const jsonData = await response.json();
       const data = jsonData;
-      setBussinessDetails((prev) => ({
+      setBusinessDetails((prev) => ({
         ...prev, business_country: { country: data.country, code: data["country abbreviation"] }, business_state: { state: data?.places && data?.places[0]?.state, code: data?.places && data?.places[0]["state abbreviation"] }, business_city: data?.places && data?.places[0]["place name"]
       }));
     } catch (error) {
       console.error(error);
     }
+
+
+  }
+
+  const handlereset = (e)=>{
+    e.preventDefault();
+    setActive('');
+    setEmailValid(true);
+    setcontactEmailValid(true)
+    setValidated(false);
+    setBusinessNumberError('');
+    setContactNumberError(''); 
+    setBusinessDetails({
+      business_name: '',
+      business_address: '',
+      business_city: '',
+      business_zipcode: '',
+      business_country: { country: '', code: '' },
+      business_state: { state: '', code: '' },
+      business_phone: '',
+      website_url: '',
+      business_email: '',
+      contact_firstname: '',
+      contact_lastname: '',
+      contact_email: '',
+      contact_number: '',
+      business_catrgory: '',
+      business_comments: '',
+      lss_id: '',
+      keywords: ''
+    });
 
   }
 
@@ -217,35 +364,36 @@ const Deshboard = () => {
               <h3> <IoIosBusiness style={{ display: "inline-block" }} />Business Details.</h3>
 
               <Input placeholder={"Business name"} actas={Row} name='business_name'
-           
-                value={bussinessDetails.business_name}
+                value={businessDetails.business_name}
                 onChangeHandler={onChangeHandler}
-                isInvalid={validated && !bussinessDetails.business_name && true}
+                isInvalid={validated && !businessDetails.business_name && true}
               />
 
               <Input placeholder={"Enter your business address"} name='business_address'
-                value={bussinessDetails.business_address}
+                value={businessDetails.business_address}
                 actas={Row}
                 onChangeHandler={onChangeHandler}
-                isInvalid={validated && !bussinessDetails.business_address && true}
+                isInvalid={validated && !businessDetails.business_address && true}
               />
 
               <Row className='gx-5'>
                 <Col>
                   <Input placeholder={"Enter your business city"} name='business_city'
-                    value={bussinessDetails.business_city}
+                    value={businessDetails.business_city}
                     actas={Row} onChangeHandler={onChangeHandler}
-                    isInvalid={validated && !bussinessDetails.business_city && true}
+                    isInvalid={validated && !businessDetails.business_city && true}
                   />
                 </Col>
 
                 <Col>
                   <Input placeholder={"Enter your ZipCode"} name='business_zipcode'
-                    value={bussinessDetails.business_zipcode}
+                    type='number'
+                    value={businessDetails.business_zipcode}
                     actas={Row} onChangeHandler={handleZipCode}
-                    isInvalid={validated && !bussinessDetails.business_zipcode && true}
+                    isInvalid={validated && !businessDetails.business_zipcode && true}
 
                   />
+                  {zipcodeError && <div className='text-danger'>{zipcodeError}</div>}
                 </Col>
 
               </Row>
@@ -254,61 +402,84 @@ const Deshboard = () => {
 
                 <Col >
                   <Input placeholder={"Country"} actas={Row} name='business_country'
-                    isInvalid={validated && !bussinessDetails.business_country.country && true}
-                    value={bussinessDetails.business_country.country} onChangeHandler={onChangeHandler} />
+                    isInvalid={validated && !businessDetails.business_country.country && true}
+                    value={businessDetails.business_country.country} onChangeHandler={onChangeHandler} />
                 </Col>
 
                 <Col >
                   <Input placeholder={"State"} actas={Row}
-                    isInvalid={validated && !bussinessDetails.business_state.state && true}
-                    name='business_state' value={bussinessDetails.business_state.state} onChangeHandler={onChangeHandler} />
+                    isInvalid={validated && !businessDetails.business_state.state && true}
+                    name='business_state' value={businessDetails.business_state.state} onChangeHandler={onChangeHandler} />
                 </Col>
 
               </Row>
 
               <Input placeholder={"Business phone number"} name='business_phone'
-                isInvalid={validated && !bussinessDetails.business_phone && true}
-                value={bussinessDetails.business_phone} actas={Row} onChangeHandler={onChangeHandler} />
+                isInvalid={validated && !businessDetails.business_phone && true}
+                value={businessDetails.business_phone} actas={Row} onChangeHandler={onChangeHandler} 
+                />
+
+              {businessNumberError && <div className='text-danger'>{businessNumberError}</div>}
 
               <Input placeholder={"Website URL"} name='website_url'
-                isInvalid={validated && !bussinessDetails.website_url && true}
-                actas={Row} value={bussinessDetails.website_url} onChangeHandler={onChangeHandler} />
+                isInvalid={validated && !businessDetails.website_url && true}
+                actas={Row} value={businessDetails.website_url} onChangeHandler={onChangeHandler} />
 
-              <Input placeholder={"Enter you business email"}
-                isInvalid={validated && !bussinessDetails.business_email && true}
-                name='business_email' actas={Row} value={bussinessDetails.business_email} onChangeHandler={onChangeHandler} />
+              <Input
+                placeholder={"Enter you business email"}
+                isInvalid={validated && !businessDetails.business_email && true}
+                name='business_email'
+                actas={Row}
+                value={businessDetails.business_email}
+                onChangeHandler={onChangeHandler}
+              />
+ 
+              {!emailValid && (
+                <Form.Text className="text-danger">
+                  Invalid email address.
+                </Form.Text>
+              )}
             </Col>
 
 
             <Col xs={12} className='mb-4 d-flex flex-column gap-3'>
               <h3><FaInfoCircle style={{ display: "inline-block" }} />  Additional Information.</h3>
               <Input placeholder={"Contact first name"} name='contact_firstname'
-                value={bussinessDetails.contact_firstname}
-                isInvalid={validated && !bussinessDetails.contact_firstname && true}
+                value={businessDetails.contact_firstname}
+                isInvalid={validated && !businessDetails.contact_firstname && true}
 
                 actas={Row} onChangeHandler={onChangeHandler} />
 
               <Input placeholder={"Contact last name"}
-                name='contact_lastname' value={bussinessDetails.contact_lastname}
-                isInvalid={validated && !bussinessDetails.contact_lastname && true}
-
+                name='contact_lastname' value={businessDetails.contact_lastname}
+                isInvalid={validated && !businessDetails.contact_lastname && true}
                 actas={Row} onChangeHandler={onChangeHandler} />
 
-
-
               <Input placeholder={"Contact email"}
-                isInvalid={validated && !bussinessDetails.contact_email && true}
-                name='contact_email' value={bussinessDetails.contact_email} actas={Row} onChangeHandler={onChangeHandler} />
+                isInvalid={validated && !businessDetails.contact_email && true}
+                name='contact_email' value={businessDetails.contact_email} actas={Row} onChangeHandler={onChangeHandler} 
+                
+                />
+
+            
+              {!contactemailValid && (
+                <Form.Text className="text-danger">
+                  Invalid email address.
+                </Form.Text>
+              )}
 
 
               <Input placeholder={"Contact Number"}
-                isInvalid={validated && !bussinessDetails.contact_number && true}
+                isInvalid={validated && !businessDetails.contact_number && true}
+                type="text"
+                name='contact_number' value={businessDetails.contact_number} actas={Row} onChangeHandler={onChangeHandler} />
 
-                name='contact_number' value={bussinessDetails.contact_number} actas={Row} onChangeHandler={onChangeHandler} />
+              {contactNumberError && <div className='text-danger'>{contactNumberError}</div>}
+
               <Input placeholder={"Business Category:What do you do?(e.g 'shoes' or 'plumber'"}
-                isInvalid={validated && !bussinessDetails.business_catrgory && true}
+                isInvalid={validated && !businessDetails.business_catrgory && true}
 
-                value={bussinessDetails.business_catrgory} actas={Row} name='business_catrgory' onChangeHandler={onChangeHandler} />
+                value={businessDetails.business_catrgory} actas={Row} name='business_catrgory' onChangeHandler={onChangeHandler} />
 
 
               <div class="row row-cols-md-4">
@@ -318,16 +489,16 @@ const Deshboard = () => {
                   placeholder="Leave a comment here"
                   style={{ height: '100px' }}
                   name='business_comments'
-                  value={bussinessDetails.business_comments}
+                  value={businessDetails.business_comments}
                   onChange={onChangeHandler}
-                  isInvalid={validated && !bussinessDetails.business_comments && true}
+                  isInvalid={validated && !businessDetails.business_comments && true}
                 >
                 </Form.Control>
               </div>
 
 
               <div className='d-flex justify-content-end gap-3 deshboardBtnGroup' >
-                <button className='btn btn-secondary rounded-pill'>Reset</button>
+                <button className='btn btn-secondary rounded-pill' onClick={handlereset}>Reset</button>
                 <button className='btn btn-primary rounded-pill' type="submit">
                   {loading ? ('Loading...') : ('Get Listed!')}
                 </button>

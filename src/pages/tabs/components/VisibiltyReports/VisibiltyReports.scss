@@ -3,11 +3,17 @@
 }
 .tableStatusList {
 thead{
-  border-bottom: 2px solid #ddd;
+  border-bottom: 1px solid #ccc;
 th{
-color: #858585;
-    font-size: 15px;
+color: #333;
+    font-size: 16px;
     font-weight: bold; 
+    padding: 15px 15px;
+  }
+}
+tbody{ 
+td{ 
+    padding: 10px 15px;
   }
 }
 .tableStatusLogo {
@@ -17,4 +23,17 @@ color: #858585;
   display: inline-block;
   margin-right: 8px;
 }
+}
+
+.visibilty-report-table {
+    position: relative;
+    min-height: 265px;
+    .loaderWrap {
+     position: absolute;
+     background-color: transparent;
+     .spinner {
+    border: 10px solid #ddd;
+    border-left-color: #f78636;
+}
+    }
 }

@@ -1,7 +1,8 @@
 import React from 'react'
 import DeatailsCard from '../DeatailsCard';
 import { Line } from 'react-chartjs-2';
-import Chart  from './Chart';
+import Chart from './Chart';
+import "./Citation.scss"
 
 const data = {
   labels: [
@@ -64,48 +65,53 @@ const data = {
 };
 
 
-export const Citations = ({ userAvaiable }) => {
+export const Citations = ({ userAvailable }) => {
   return (
     <div>
-      <DeatailsCard userAvaiable={userAvaiable} />
+      <DeatailsCard userAvailable={userAvailable} />
 
 
-      <div>
-        <h1>Citations</h1>
+      <div className='mt-4'>
+        <h2 className='section_heading'>Citations</h2>
         <p>The Citations reports shows you where your Name , Address are #are listed across the web. it's important to have  many Citations as Google uses these as  trust signals.</p>
       </div>
 
-      <Chart/>
+      <Chart />
 
 
-      <div className='CitationTable'>
-        <table className="table table-borderless">
-          <thead>
-            <tr>
-
-              <th scope="col">LISTING</th>
-              <th scope="col">STATUS</th>
-              <th scope="col">
-                VIEW LINK</th>
+      <div className='CitationTable mt-4'>
+        <table class="table align-middle table-hover">
+          <thead class="thead-dark">
+            <tr class="table-dark">
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th >1</th>
+              <th scope="row">1</th>
+              <td>Mark</td>
               <td>Otto</td>
               <td>@mdo</td>
             </tr>
             <tr>
-              <th >2</th>
+              <th scope="row">2</th>
+              <td>Jacob</td>
               <td>Thornton</td>
               <td>@fat</td>
             </tr>
             <tr>
               <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@twitter</td>
             </tr>
           </tbody>
         </table>
+
+
 
       </div>
 

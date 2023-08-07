@@ -6,7 +6,7 @@ const Auth = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [token , setToken] = useState('');
-  const appid = 'e0f74373-e697-492e-a697-95c5914fb539'
+
  
 
 

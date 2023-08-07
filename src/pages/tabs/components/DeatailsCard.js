@@ -1,15 +1,15 @@
 import React from 'react'
 
-const DeatailsCard = ({ userAvaiable }) => {
+const DeatailsCard = ({ userAvailable }) => {
 
   return (
-    <div className='card mb-3' >
+    <div className='card deatailsCard mb-4' >
       <div style={{ margin: "20px 25px" }}>
-        <h6 className='fw-bold' >{userAvaiable.business_name} - {userAvaiable.business_city}</h6>
-        <p>Address:- {userAvaiable.business_address}, {userAvaiable.business_city || userAvaiable.business_city} {userAvaiable.business_state || userAvaiable.state}, {userAvaiable.business_country || userAvaiable.country} {userAvaiable.business_zipcode || userAvaiable.zip}</p>
-        <p>Phone:- {userAvaiable.business_phonenumber || userAvaiable.phone}</p>
-        <p >Website:- {userAvaiable.website_url || userAvaiable.business_url}</p>
-        <p>Email Address:- {userAvaiable.business_emailaddress || userAvaiable.business_email_address}</p>
+        <h6 className='fw-bold' >{userAvailable.business_name} - {userAvailable.business_city}</h6>
+        <p>Address:- {userAvailable.business_address}, {userAvailable.business_city || userAvailable.business_city} {userAvailable.business_state || userAvailable.state}, {userAvailable.business_country || userAvailable.country} {userAvailable.business_zipcode || userAvailable.zip}</p>
+        <p>Phone:- {userAvailable.business_phonenumber || userAvailable.phone}</p>
+        <p >Website:- {userAvailable.website_url || userAvailable.business_url}</p>
+        <p>Email Address:- {userAvailable.business_emailaddress || userAvailable.business_email_address}</p>
       </div>
 
     </div>

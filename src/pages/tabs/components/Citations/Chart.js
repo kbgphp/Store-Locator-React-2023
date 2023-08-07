@@ -16,7 +16,7 @@ const data = {
     "YelloYello",
     "iBegin",
     "Here Live Maps",
-   
+
   ],
   datasets: [
     {
@@ -38,7 +38,7 @@ const data = {
       pointHoverBorderWidth: 2,
       pointRadius: 1,
       pointHitRadius: 10,
-      data: [100, 80,  150, 200, 190, 210, 170, 190, 220, 200]
+      data: [100, 80, 150, 200, 190, 210, 170, 190, 220, 200]
     },
     {
       label: "Visit Trend (No Season)",
@@ -67,12 +67,12 @@ const data = {
 function Chart() {
   return (
     <div className="mt-4">
-      <h2>Citations chart </h2>
-      <div className="mb-4">
-      <Line data={data} 
-      // width={100} 
-      height={80} 
-      />
+      <h3> <strong> Citations chart </strong></h3>
+      <div className="mb-5 chartCitations">
+        <Line data={data}
+          // width={100} 
+          height={80}
+        />
 
       </div>
     </div>

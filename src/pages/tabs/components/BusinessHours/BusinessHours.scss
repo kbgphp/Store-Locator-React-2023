@@ -1,0 +1,79 @@
+.BusinessHoursText{
+  h2{
+margin-top: 15px;
+    margin-bottom: 22px;
+        font-size: 24px;
+  }
+
+}   
+
+.orange_btn{
+      background-color: #f78636 !important;
+    border: medium none;
+    border-radius: 25px;
+    color: #fff;
+    font-family: "Lato",sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    height: 46px;
+    margin: 0 0 0 30px;
+    outline: medium none;
+    padding: 0;
+    text-align: center;
+    width: 200px;
+}
+.bussinesHoursInputs .form-select{
+  border: #ddd solid 2px;
+    color: #555555;
+    border-radius: 50px;
+    padding:10px 15px;
+}
+
+h3.formHeadings {
+    display: flex;
+    align-items: center;
+    font-style: italic;
+    font-weight: 600;
+
+.titleWicon {
+    width: 24px;
+    height: 24px; 
+    margin-right: 8px;
+}
+
+}
+
+.bussinesHoursInputs .dayname {
+    font-weight: 600;
+}
+.bussinesHoursInputs{
+.form-switch {
+padding-left: 60px;
+.form-check-input {
+    width: 50px;
+    border-radius: 50px;
+    height: 26px;
+    margin-top: 0;
+    margin-left: -60px;
+    --bs-form-switch-bg:url(../../../../assets/images/bs-form-switch-bg.svg);
+    border-color: #E77D27; 
+    cursor: pointer;
+    &:focus {
+    border-color: #E77D27; 
+    box-shadow: 0 0 0 0.25rem hsl(27deg 80% 53% / 25%);
+    --bs-form-switch-bg:url(../../../../assets/images/bs-form-switch-bg.svg);
+}
+    &:checked {
+    background-color: #E77D27;
+    border-color: #E77D27;
+    --bs-form-switch-bg: url(
+      'data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27%3e%3ccircle r=%273%27 fill=%27%23fff%27/%3e%3c/svg%3e');
+}
+
+
+}
+.form-check-label{
+  line-height: 26px;
+}
+}
+}

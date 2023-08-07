@@ -3,7 +3,8 @@ import { Container, Row, Col, Form, InputGroup, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom'
-
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 
 import logo from "../../assets/images/logoleft-white.svg";
@@ -13,124 +14,45 @@ import "./homepage.scss"
 const Homepage = () => {
 
   const navigate = useNavigate();
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [accesstoken, setAccessToken] = React.useState('');
-  // console.log("token", accesstoken)
-
-  // useEffect(() => {
-  //   setAccessToken(searchParams.get("code"));
-  // }, [searchParams]);
-
-  // let access_token = JSON.parse(localStorage.getItem('access_token'));
-  // console.log("access_token", access_token)
-
-  // useEffect(()=>{
-  //   if (!access_token){
-  //     axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
-  //       console.log("res access token", res.data.refresh_token);
-  //       localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
-  //     }).catch((err) => {
-  //       console.log("err  access error", err)
-  //     });
-  //   }
-    
-  // }, [accesstoken])
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [accesstoken, setAccessToken] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  
+  useEffect(() => {
+    setAccessToken(searchParams.get("code"));
+  }, [searchParams]);
 
 
   useEffect(() => {
-    let userAvaiable = JSON.parse(localStorage.getItem('user'));
-    console.log("userAvaiable", userAvaiable)
-    if (userAvaiable){
-      navigate('/tabs')
-    }
-  }, [])
+  
+    // setTimeout(() => {
+    //   const InstanceId = JSON.parse(localStorage.getItem('instance_id'));
+    //   if (!InstanceId){
+    //     const instence_id = window?.Wix?.Utils?.getInstanceId();
+    //     localStorage.setItem('instance_id', JSON.stringify(instence_id));
+    //   }
+   
+    // }, 2000);
 
-  const [formData, setformData] = React.useState({
-    businessText: '',
-    zipcode: ''
-  });
+  }, []);
 
-  const [loading, setLoading] = React.useState(false)
-
-  const [errors, setErrors] = React.useState({
-    businessText: '',
-    zipcode: ''
-  })
-
-  const handleBlur = (field) => {
-    if (!formData[field]) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [field]: `Please enter your ${field === 'businessText' ? 'business name' : 'zipcode'}.`
-      }));
-    }
-  }
-
-  const onChangeHandler = (event) => {
-    const { name, value } = event.target;
-
-    if (name === 'zipcode' && value.length < 5) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: `To short!!.`
-      }));
-    } else if (name === 'businessText' && value.length === 1) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: `please enter valid business`
-      }));
-    }
-    else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: ''
-      }));
-    }
-
-
-    setformData((prev) => ({
-      ...prev, [name]: value
-    }));
-
-
-
-
-
-
-  }
-
-  const handlesubmit = async (e) => {
-    e.preventDefault()
-    if (!formData.businessText) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        'businessText': `Please enter your business name`
-      }));
-    }
-
-    if (!formData.zipcode) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        'zipcode': `Enter zipcode`
-      }));
-    }
-
-    if (formData.businessText && formData.zipcode && errors.businessText === '' &&
-      errors.zipcode === '') {
+  const formik = useFormik({
+    initialValues: { businessText: '',zipcode: '' },
+    validationSchema: Yup.object({
+      businessText: Yup.string().min(1,'Must be 2 characters').required('Required'),
+      zipcode: Yup.string().matches(/^\d+$/, 'Must be a numeric value').min(5, 'Must be 5 characters or grater').max(5, 'Must be 5 characters or less').required('Required'),
+    }),
+    onSubmit:async values => {
       setLoading(true);
-
       let config = {
         headers: {
           'x-auth-token': "@W#I$X7jlk8!%*dd%4",
         }
       }
-
       let data = {
-        "search": formData.businessText,
-        "zipcode": formData.zipcode
+        "search": values.businessText,
+        "zipcode": values.zipcode
       }
-
       await axios.post(`${process.env.REACT_APP_BASE_URL}/api/search_business`, data, config).then((response) => {
         setLoading(false)
         if (response.data.data.data.data.length > 0) {
@@ -142,11 +64,48 @@ const Homepage = () => {
         setLoading(false)
         console.log("error", error)
       })
-    }
-  }
+     
+      
+    },
+  });
+  
+  // let access_token = JSON.parse(localStorage.getItem('access_token'));
+  let access_token = ''
+
+
+  
+
+  useEffect(() => {
+    if (!access_token) {
+      axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
+        localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
+      }).catch((err) => {
+        console.log("err  access error", err)
+      });
+     }
+
+  }, [accesstoken])
 
 
 
+  // useEffect(()=>{
+  //   check_user_exist();
+  // },[]);
+
+  // const check_user_exist = async()=>{
+ 
+  //   // const instence_id = window?.Wix?.Utils?.getInstanceId();
+  //   await axios.get (
+  //     // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
+  //     `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
+  //     ).then((res)=>{
+  //       if (res.data.data.instance_id){
+  //         navigate('/tabs')
+  //       }
+  //     }).catch((err)=>{
+  //     console.log("err",err)
+  //     })
+  // }
 
   return (<section className='homepageSection'>
     <Container>
@@ -165,56 +124,76 @@ const Homepage = () => {
       </Row>
 
 
+        <Form onSubmit={formik.handleSubmit}>
       <Row>
-        <Col xs={12} md={7}>
-          <Row>
-            <Col xs={6} md={7}>
-              <Form onSubmit={handlesubmit}>
+          <Col xs={12} md={7}>
+            <Row>
+              <Col xs={6} md={7}>
+
                 <InputGroup className="mb-1">
                   <Form.Control
+                    id="businessText"
                     placeholder="Enter your business name"
+                    name="businessText"
+                    type="text"
                     className='rounded-pill'
-                    onBlur={() => handleBlur('businessText')}
-                    name='businessText'
-                    onChange={onChangeHandler}
-                    value={formData.businessText}
-                  />
-                </InputGroup> </Form>
-              {errors.businessText && <span className='error-message'>{errors.businessText}</span>}
-            </Col>
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.businessText} />
+                </InputGroup>
 
-            <Col xs={6} md={5}>
-              <Form onSubmit={handlesubmit}>
+                {formik.touched.businessText && formik.errors.businessText ? (
+                  <div className='error-message'>{formik.errors.businessText}</div>
+                ) : null}
+              </Col>
+              <Col xs={6} md={5}>
 
                 <InputGroup className="mb-1">
 
                   <Form.Control
-                    maxLength="5"
+                    id="zipcode"
                     placeholder="zipcode"
-                    className='rounded-pill'
+                    name="zipcode"
                     type="number"
-                    name='zipcode'
-                    onChange={onChangeHandler}
-                    value={formData.zipcode}
-                    onBlur={() => handleBlur('zipcode')}
-
+                    className='rounded-pill'
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.zipcode}
                   />
+
+               
                 </InputGroup>
-              </Form>
+                <p className='zip-messsage mb-1'>At this time we accept US zipcodes only</p>
+                {formik.touched.zipcode && formik.errors.zipcode ? (
+                  <div className='error-message'>{formik.errors.zipcode}</div>
+                ) : null}
 
-              <p className='zip-messsage mb-1'>At this time we accept US zipcodes only</p>
-              {errors.zipcode && <span className='error-message'>{errors.zipcode}</span>}
+              </Col>
+            </Row>
             </Col>
+          <Col xs={12} md={5}>
+            <Button variant="primary rounded-pill" type='submit'>
+              {loading ? 
+              ('Loading...')
+              // <div className="loadingBubble">
+              //     <div></div>
+              //     <div></div>
+              //     <div></div>
+              //   </div>
+              
+              :
+              
+              (' Get Your Business Listed')}
+            </Button>
 
-          </Row>
-        </Col>
+            <Button onClick={()=>window?.Wix?.Dashboard?.openBillingPage()} >
+             Open Billing Page
+            </Button>
 
-        <Col xs={12} md={5}>
-          <Button variant="primary rounded-pill " onClick={handlesubmit}>
-            {loading ? ('Loading...') : (' Get Your Business Listed')}
-          </Button>
-        </Col>
-      </Row>
+            </Col>
+          
+        </Row>
+        </Form>
 
     </Container>
   </section>

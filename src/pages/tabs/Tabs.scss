@@ -1,10 +1,13 @@
+header.TabsHeader {
+    padding: 20px 0;
+}
 .TabsContainer {
-  margin: 30px 0px 0px 40px;
+  margin: 30px 0px 0px 0;
   p {
     cursor: pointer;
   }
   .TabsHeader {
-    padding-left: 260px;
+    // padding-left: 260px;
     margin-bottom: 30px;
 
   }
@@ -13,17 +16,42 @@
   }
 }
 
-.active {
-  color: blue;
+
+.TabsContainer {
+    position: relative;
 }
 ul.asidbarTabs {
     margin: 0px;
-    padding: 0px;
     list-style: none;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px 0;
+    max-width: 280px;
+    height: 100%;
+    position: sticky;
+    top: 0;
     a{
-      padding: 16px 0;
+      padding: 16px 20px;
     display: block;
     font-weight: 600;
     cursor: pointer;
+    position: relative;
+    &::after{
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 100%;
+      top: 0;
+      left: 0;
+        background-color: #22538824;
+        transition: 0.5s;
     }
+    &:hover:after, &.active:after{
+    width: 100%;
+    }
+      
+    }
+
+
 }

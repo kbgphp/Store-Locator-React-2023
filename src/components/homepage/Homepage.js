@@ -17,10 +17,10 @@ const Homepage = () => {
   const [searchParams] = useSearchParams();
   const [accesstoken, setAccessToken] = React.useState('');
   const [instance_id, setInstance_id] = React.useState('');
-  console.log("instance_id", instance_id)
+
 
   const [loading, setLoading] = React.useState(false);
-  
+
   useEffect(() => {
     setAccessToken(searchParams.get("code"));
     setInstance_id(searchParams.get("instanceId"))
@@ -28,23 +28,24 @@ const Homepage = () => {
 
 
   useEffect(() => {
-
-      const InstanceId = JSON.parse(localStorage.getItem('instance_id'));
-      if (!InstanceId){
-        console.log("InstanceId in fun", InstanceId)
-        // const instence_id = window?.Wix?.Utils?.getInstanceId();
-        localStorage.setItem('instance_id', JSON.stringify(instance_id));
-      }
+    const InstanceIdlocal = localStorage.getItem('instance_id');
+    // const InstanceId = JSON.parse(localStorage.getItem('instance_id')) ? JSON.parse(localStorage.getItem('instance_id')) : '';
+    if (!InstanceIdlocal) {
+      console.log("InstanceId in fun", InstanceIdlocal)
+      // const instence_id = window?.Wix?.Utils?.getInstanceId();
+      localStorage.setItem('instance_id', JSON.stringify(instance_id));
+    } else {
+    }
 
   }, [instance_id]);
 
   const formik = useFormik({
-    initialValues: { businessText: '',zipcode: '' },
+    initialValues: { businessText: '', zipcode: '' },
     validationSchema: Yup.object({
-      businessText: Yup.string().min(1,'Must be 2 characters').required('Required'),
+      businessText: Yup.string().min(1, 'Must be 2 characters').required('Required'),
       zipcode: Yup.string().matches(/^\d+$/, 'Must be a numeric value').min(5, 'Must be 5 characters or grater').max(5, 'Must be 5 characters or less').required('Required'),
     }),
-    onSubmit:async values => {
+    onSubmit: async values => {
       setLoading(true);
       let config = {
         headers: {
@@ -67,48 +68,49 @@ const Homepage = () => {
         setLoading(false)
         console.log("error", error)
       })
-     
-      
+
+
     },
   });
-  
+
   // let access_token = ''
 
 
-  
+
+
+  // useEffect(() => {
+
+  //   let access_token = JSON.parse(localStorage.getItem('access_token')) ? JSON.parse(localStorage.getItem('access_token')) : '';
+
+  //   if (!access_token) {
+  //     axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
+  //       localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
+  //     }).catch((err) => {
+  //       console.log("err  access error", err)
+  //     });
+  //   }
+
+  // }, [accesstoken])
+
+
 
   useEffect(() => {
-    let access_token = JSON.parse(localStorage.getItem('access_token'));
-
-    if (!access_token) {
-      axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
-        localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
-      }).catch((err) => {
-        console.log("err  access error", err)
-      });
-     }
-
-  }, [accesstoken])
-
-
-
-  useEffect(()=>{
     check_user_exist();
-  },[]);
+  }, []);
 
-  const check_user_exist = async()=>{
- 
+  const check_user_exist = async () => {
+
     const instence_id = window?.Wix?.Utils?.getInstanceId();
-    await axios.get (
+    await axios.get(
       `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
       // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
-      ).then((res)=>{
-        if (res.data.data.instance_id){
-          navigate('/tabs')
-        }
-      }).catch((err)=>{
-      console.log("err",err)
-      })
+    ).then((res) => {
+      if (res.data.data.instance_id) {
+        navigate('/tabs')
+      }
+    }).catch((err) => {
+      console.log("err", err)
+    })
   }
 
   return (<section className='homepageSection'>
@@ -128,8 +130,8 @@ const Homepage = () => {
       </Row>
 
 
-        <Form onSubmit={formik.handleSubmit}>
-      <Row>
+      <Form onSubmit={formik.handleSubmit}>
+        <Row>
           <Col xs={12} md={7}>
             <Row>
               <Col xs={6} md={7}>
@@ -165,7 +167,7 @@ const Homepage = () => {
                     value={formik.values.zipcode}
                   />
 
-               
+
                 </InputGroup>
                 <p className='zip-messsage mb-1'>At this time we accept US zipcodes only</p>
                 {formik.touched.zipcode && formik.errors.zipcode ? (
@@ -174,28 +176,28 @@ const Homepage = () => {
 
               </Col>
             </Row>
-            </Col>
+          </Col>
           <Col xs={12} md={5}>
             <Button variant="primary rounded-pill" type='submit'>
-              {loading ? 
+              {loading ?
                 <>
                   Get Your Business Listed
                   <div class="spinner-border spinner-border-sm" role="status"> </div>
                 </>
-              
-              :
-              
-              (' Get Your Business Listed')}
+
+                :
+
+                (' Get Your Business Listed')}
             </Button>
 
-            <Button onClick={()=>window?.Wix?.Dashboard?.openBillingPage()} >
-             Open Billing Page
+            <Button onClick={() => window?.Wix?.Dashboard?.openBillingPage()} >
+              Open Billing Page
             </Button>
 
-            </Col>
-          
+          </Col>
+
         </Row>
-        </Form>
+      </Form>
 
     </Container>
   </section>

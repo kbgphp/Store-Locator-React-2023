@@ -29,7 +29,6 @@ const Homepage = () => {
 
   useEffect(() => {
     const InstanceIdlocal = localStorage.getItem('instance_id');
-    // const InstanceId = JSON.parse(localStorage.getItem('instance_id')) ? JSON.parse(localStorage.getItem('instance_id')) : '';
     if (!InstanceIdlocal) {
       console.log("InstanceId in fun", InstanceIdlocal)
       // const instence_id = window?.Wix?.Utils?.getInstanceId();
@@ -73,24 +72,19 @@ const Homepage = () => {
     },
   });
 
-  // let access_token = ''
+  useEffect(() => {
+    let access_token = localStorage.getItem('access_token');
+    // let access_token = JSON.parse(localStorage.getItem('access_token')) ? JSON.parse(localStorage.getItem('access_token')) : '';
 
+    if (!access_token) {
+      axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
+        localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
+      }).catch((err) => {
+        console.log("err  access error", err)
+      });
+    }
 
-
-
-  // useEffect(() => {
-
-  //   let access_token = JSON.parse(localStorage.getItem('access_token')) ? JSON.parse(localStorage.getItem('access_token')) : '';
-
-  //   if (!access_token) {
-  //     axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
-  //       localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
-  //     }).catch((err) => {
-  //       console.log("err  access error", err)
-  //     });
-  //   }
-
-  // }, [accesstoken])
+  }, [accesstoken])
 
 
 

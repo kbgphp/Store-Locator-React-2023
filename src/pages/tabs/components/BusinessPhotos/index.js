@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { HiMiniPhoto } from 'react-icons/hi2';
-import { ImCross } from "react-icons/im"
+import React from 'react'
+
 
 import axios from 'axios';
-import { filter, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 
 import DeatailsCard from '../DeatailsCard';
@@ -12,52 +11,18 @@ import closeimg from "../../../../assets/images/closeIcon.svg"
 import photoicon from "../../../../assets/images/imageIcon.svg"
 import "./BusinessPhotos.scss"
 
-export const BusinessPhotos = ({ userAvailable }) => {
+export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoading, logoLoader, setLogo, imageLoader, setlogoLoader, logo, businessImage }) => {
 
-  const [logoLoader, setlogoLoader] = useState(false);
-  const [imageLoader, setImageLoading] = useState(false);
 
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [deletingIndex, setDeletingIndex] = React.useState(null);
 
-  const [logo, setLogo] = useState('');
-  const [businessImage, setBusinessImage] = useState([]);
-
   const toast = useToast();
-
 
   // const accesstoken = JSON.parse(localStorage.getItem('access_token'));
   const user = JSON.parse(localStorage.getItem('user'));
   const accesstoken = 'OAUTH2.eyJraWQiOiJkZ0x3cjNRMCIsImFsZyI6IkhTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcImY2OGY1ODQzLWZjMzktNDkwYy1hYmE2LTU2YmE4ZmY5MTRlMlwifSIsImlhdCI6MTY5MTM5MDIxMSwiZXhwIjoxNzU0NDYyMjExfQ.KBRbKJVryMn0AtpysSjQXpGGHiVwR6WxqxvQuTSO0GU'
 
-  useEffect(() => {
-    getUserDetails();
-    getPhotoDetails();
-  }, []);
-
-  const getUserDetails = async () => {
-    setlogoLoader(true)
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/api/userDetail/${user._id}`).then((res) => {
-      setLogo(res.data.data[0].logo_url);
-      setlogoLoader(false)
-    }).catch((err) => {
-      setlogoLoader(false)
-      console.log("err", err)
-    })
-  }
-
-  const getPhotoDetails = async () => {
-    setImageLoading(true)
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/api/userPhotos/${user._id}`).then((res) => {
-      console.log("res.data.data", res.data.data)
-      setBusinessImage(res.data.data);
-      setImageLoading(false)
-      console.log("res", res.data)
-    }).catch((err) => {
-      console.log("err".err);
-      setImageLoading(false)
-    })
-  }
 
   const handleURlChange = async (e) => {
     const file = e.target.files[0];
@@ -104,8 +69,14 @@ export const BusinessPhotos = ({ userAvailable }) => {
     setImageLoading(true)
     await axios.post(`${process.env.REACT_APP_BASE_URL}/api/upload_photos/${user._id}`, formData, config).then((res) => {
       setImageLoading(false);
-      getPhotoDetails();
-      console.log("ressss", res.data)
+      console.log("ressss", res.data.data)
+      const newImageData = {
+        _id: res.data.data.user_id,
+        full_url: res.data.data.full_url,
+      };
+      setBusinessImage((prevImages) => [...prevImages, newImageData]);
+
+
       if (res.data.data.message) {
         toast({
           title: 'Upload Logo sucessfully',
@@ -149,21 +120,22 @@ export const BusinessPhotos = ({ userAvailable }) => {
 
       <DeatailsCard userAvailable={userAvailable} />
 
-      <div className='mt-4 '>  <h3 className='mb-4 formHeadings'>
-        <img className='headingIcon' width={24} src={photoicon} />
+      <div className='mt-4'>  <h3 className='mb-4 formHeadings'>
+        <img className='headingIcon' width={24} src={photoicon} alt='icon' />
 
         Business logo</h3>
 
         <div class="image-uploadBlock singalimgUpload">
           <label for="file-input">
-            <img src={damloadimg} />
+            <img src={damloadimg} alt='upload-img' />
             <h5>Upload photo</h5>
           </label>
-          <input style={{ display: "none" }} id="file-input" type="file" onChange={handleURlChange} />
+          <input style={{ display: "none" }} id="file-input" type="file"
+            onChange={handleURlChange}
+          />
         </div>
-
-
       </div>
+
       <div className='uploadedImgBlock'>
         {
           logoLoader ?
@@ -172,56 +144,39 @@ export const BusinessPhotos = ({ userAvailable }) => {
               <div></div>
               <div></div>
             </div>
-
-            : <img src={logo} />
+            : <img src={logo} alt='Business-logo' />
         }
       </div>
 
-
-      <div className='mt-5 '>
+      <div className='mt-5'>
         <h3 className='mb-4 formHeadings'>
-          <img className='headingIcon' width={24} src={photoicon} />
+          <img className='headingIcon' width={24} src={photoicon} alt='Business-photos' />
 
           Business Photos</h3>
 
 
         <div class="image-uploadBlock image-upload-photos mb-4">
           <label for="file-input-photos">
-            <img src={damloadimg} />
+            <img src={damloadimg} alt='Business-photos' />
             <h5>Upload photos</h5>
           </label>
-          <input style={{ display: "none" }} id="file-input-photos" type="file" onChange={handleBusinessChange} />
+          <input style={{ display: "none" }} id="file-input-photos" type="file"
+            onChange={handleBusinessChange}
+          />
 
         </div>
 
       </div>
 
-      {/* {imageLoader ? <div className="spinner-border text-dark" role="status">
-      </div> :
-        <div style={{ maxWidth: '1000px', display: "flex" }}>
-          {
-            businessImage.length > 0 && businessImage.map((img, index) => {
-              return <div className='uploadedImgBlock'>
-                <img key={index} src={img.full_url} />
-                <div className='imgCloseButton'>
-                  <img src={closeimg} onClick={() => handleDeleteImage(img._id)} />
-                 
-                </div>
-              </div>
-
-            })
-          }
-
-        </div>
-      } */}
-
       <div className='mb-4 row'>
         {
           businessImage.length > 0 && businessImage.map((img, index) => {
-            return <div className="col-sm-3"> <div className='uploadedImgBlock businessimgCard'>
-              <img key={index} src={img.full_url} />
+            return <div className="col-sm-3" key={index}> <div className='uploadedImgBlock businessimgCard'>
+              <img src={img.full_url} alt='business-img' />
               <div className='imgCloseButton'>
-                <img src={closeimg} onClick={() => handleDeleteImage(img._id, index)} />
+                <img src={closeimg} alt='close-logo'
+                  onClick={() => handleDeleteImage(img._id, index)}
+                />
 
               </div>
               {isDeleting && deletingIndex === index ?

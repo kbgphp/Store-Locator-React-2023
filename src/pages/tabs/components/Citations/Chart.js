@@ -66,7 +66,7 @@ const data = {
 
 function Chart() {
   return (
-    <div className="mt-4">
+    <div className="citationsChartBlock">
       <h3> <strong> Citations chart </strong></h3>
       <div className="mb-5 chartCitations">
         <Line data={data}

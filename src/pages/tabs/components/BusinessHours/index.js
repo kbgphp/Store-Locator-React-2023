@@ -8,8 +8,6 @@ import DeatailsCard from '../DeatailsCard';
 
 export const BusinessHours = ({ userAvailable }) => {
 
-
-
   const [businessHoursState, setBusinessHoursState] = useState({
     monday: { open: 'closed', close: 'closed' },
     tuesday: { open: 'closed', close: 'closed' },
@@ -19,12 +17,6 @@ export const BusinessHours = ({ userAvailable }) => {
     saturday: { open: 'closed', close: 'closed' },
     sunday: { open: 'closed', close: 'closed' },
   });
-
- 
-  console.log("businessHoursState", businessHoursState);
- 
-
-
   const [isChecked, setIsChecked] = useState({
     monday: false,
     tuesday: false,
@@ -43,7 +35,6 @@ export const BusinessHours = ({ userAvailable }) => {
     saturday: '',
     sunday: ''
   });
-
   const [prevvalue , setPrevvalue] = useState({
     monday: { open: 'closed', close: 'closed' },
     tuesday: { open: 'closed', close: 'closed' },
@@ -54,13 +45,9 @@ export const BusinessHours = ({ userAvailable }) => {
     sunday: { open: 'closed', close: 'closed' },
   });
 
-  console.log("prev>>>>", prevvalue)
-
-
 
   const [loading, setLoading] = useState(false);
-  const [validate, setValidate] = useState(false)
-
+ 
   const toast = useToast();
 
   const handleBusinessHoursChange = (e) => {
@@ -72,9 +59,7 @@ export const BusinessHours = ({ userAvailable }) => {
       [day]: { ...prev[day], [type]: value },
     }))
 
-    console.log("value",name, value);
-
-
+    
     const day = name.split('-')[0];
     const type = name.split('-')[1];
 
@@ -83,17 +68,11 @@ export const BusinessHours = ({ userAvailable }) => {
       [day]: { ...prev[day], [type]: value },
     }));
 
-    if (type === "close" && value === "closed") {
-      setValidate((prev) => ({ ...prev, [day]: true }));
-    } else {
-      setValidate((prev) => ({ ...prev, [day]: false }));
-    }
+    
   };
 
   const handleSubmitHours = async (e) => {
     e.preventDefault();
-
-
 
     if (!businessHoursState.monday.open || !businessHoursState.thursday.open || !businessHoursState.monday.close ||
       !businessHoursState.thursday.close || !businessHoursState.tuesday.open || !businessHoursState.tuesday.close ||
@@ -171,9 +150,9 @@ export const BusinessHours = ({ userAvailable }) => {
   }
 
   const handletoggle = (event) => {
-
+    
     const { name, checked } = event.target;
-
+  
     setIsChecked((prev) => ({
       ...prev, [name]: checked
     }))
@@ -213,9 +192,6 @@ export const BusinessHours = ({ userAvailable }) => {
 
 
       <div className='bussinesHoursInputs mt-4 mb-3'>
-
-
-
 
         <div className='row align-items-center mb-3'>
           <div className='col-2'>
@@ -351,126 +327,11 @@ export const BusinessHours = ({ userAvailable }) => {
         </div>
 
 
-
-        {/* <div className='row'>
-          <div className='col-2'>
-            Monday
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='monday-open' disabled={validate.monday} />
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='monday-close' />
-          </div>
-
-        </div>
-
-        <div className='row mt-3'>
-          <div className='col-2'>
-            Tuesday
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='tuesday-open' disabled={validate.tuesday} />
-
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='tuesday-close' />
-
-          </div>
-
-        </div>
-
-        <div className='row mt-3'>
-          <div className='col-2'>
-            Wednesday
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='wednesday-open' disabled={validate.wednesday} />
-
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='wednesday-close' />
-
-          </div>
-
-        </div>
-
-        <div className='row mt-3'>
-          <div className='col-2'>
-            Thursday
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='thursday-open' disabled={validate.thursday} />
-
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='thursday-close' />
-
-          </div>
-
-        </div>
-
-        <div className='row mt-3'>
-          <div className='col-2'>
-            Friday
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='friday-open' disabled={validate.friday} />
-
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='friday-close' />
-
-          </div>
-
-        </div>
-
-        <div className='row mt-3'>
-          <div className='col-2'>
-            Saturday
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='saturday-open' disabled={validate.saturday} />
-
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='saturday-close' />
-          </div>
-
-        </div>
-
-        <div className='row mt-3'>
-          <div className='col-2'>
-            Sunday
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='sunday-open' disabled={validate.sunday} />
-
-          </div>
-
-          <div className='col-5'>
-            <SelectBox handleBusinessHoursChange={handleBusinessHoursChange} name='sunday-close' />
-
-          </div>
-
-        </div> */}
-
-
         <div className="col-12 text-end mt-4 mb-4">
-          <button className="btn btn-primary " disabled={false} onClick={handleSubmitHours}>{loading ? ('Loading...') : ('Save Changes')} </button>
+          <button className="btn btn-primary " disabled={false} onClick={handleSubmitHours}>{loading ? <>
+            Save Changes
+            <div class="spinner-border spinner-border-sm" role="status"> </div>
+          </> : ('Save Changes')} </button>
         </div>
 
       </div>

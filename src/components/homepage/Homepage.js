@@ -14,27 +14,29 @@ import "./homepage.scss"
 const Homepage = () => {
 
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [accesstoken, setAccessToken] = React.useState('');
+  const [instance_id, setInstance_id] = React.useState('');
+  console.log("instance_id", instance_id)
+
   const [loading, setLoading] = React.useState(false);
   
   useEffect(() => {
     setAccessToken(searchParams.get("code"));
+    setInstance_id(searchParams.get("instanceId"))
   }, [searchParams]);
 
 
   useEffect(() => {
-  
-    // setTimeout(() => {
-    //   const InstanceId = JSON.parse(localStorage.getItem('instance_id'));
-    //   if (!InstanceId){
-    //     const instence_id = window?.Wix?.Utils?.getInstanceId();
-    //     localStorage.setItem('instance_id', JSON.stringify(instence_id));
-    //   }
-   
-    // }, 2000);
 
-  }, []);
+      const InstanceId = JSON.parse(localStorage.getItem('instance_id'));
+      if (!InstanceId){
+        console.log("InstanceId in fun", InstanceId)
+        // const instence_id = window?.Wix?.Utils?.getInstanceId();
+        localStorage.setItem('instance_id', JSON.stringify(instance_id));
+      }
+
+  }, [instance_id]);
 
   const formik = useFormik({
     initialValues: { businessText: '',zipcode: '' },
@@ -54,7 +56,8 @@ const Homepage = () => {
         "zipcode": values.zipcode
       }
       await axios.post(`${process.env.REACT_APP_BASE_URL}/api/search_business`, data, config).then((response) => {
-        setLoading(false)
+        setLoading(false);
+        console.log("resss>>", response)
         if (response.data.data.data.data.length > 0) {
           navigate('/deshboard', { state: { apiData: response.data.data.data.data } });
         } else {
@@ -69,13 +72,14 @@ const Homepage = () => {
     },
   });
   
-  // let access_token = JSON.parse(localStorage.getItem('access_token'));
-  let access_token = ''
+  // let access_token = ''
 
 
   
 
   useEffect(() => {
+    let access_token = JSON.parse(localStorage.getItem('access_token'));
+
     if (!access_token) {
       axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
         localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
@@ -88,24 +92,24 @@ const Homepage = () => {
 
 
 
-  // useEffect(()=>{
-  //   check_user_exist();
-  // },[]);
+  useEffect(()=>{
+    check_user_exist();
+  },[]);
 
-  // const check_user_exist = async()=>{
+  const check_user_exist = async()=>{
  
-  //   // const instence_id = window?.Wix?.Utils?.getInstanceId();
-  //   await axios.get (
-  //     // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
-  //     `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
-  //     ).then((res)=>{
-  //       if (res.data.data.instance_id){
-  //         navigate('/tabs')
-  //       }
-  //     }).catch((err)=>{
-  //     console.log("err",err)
-  //     })
-  // }
+    const instence_id = window?.Wix?.Utils?.getInstanceId();
+    await axios.get (
+      `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
+      // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
+      ).then((res)=>{
+        if (res.data.data.instance_id){
+          navigate('/tabs')
+        }
+      }).catch((err)=>{
+      console.log("err",err)
+      })
+  }
 
   return (<section className='homepageSection'>
     <Container>
@@ -174,12 +178,10 @@ const Homepage = () => {
           <Col xs={12} md={5}>
             <Button variant="primary rounded-pill" type='submit'>
               {loading ? 
-              ('Loading...')
-              // <div className="loadingBubble">
-              //     <div></div>
-              //     <div></div>
-              //     <div></div>
-              //   </div>
+                <>
+                  Get Your Business Listed
+                  <div class="spinner-border spinner-border-sm" role="status"> </div>
+                </>
               
               :
               

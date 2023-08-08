@@ -41,6 +41,8 @@ export const BusinessDetails = ({ userAvailable }) => {
   const toast = useToast();
 
   useEffect(() => {
+    setContactNumberError('');
+    setBusinessNumberError('');
     setBusinessUpdatedata({
       _id: userAvailable._id,
       lss_client_id: userAvailable.lss_client_id,
@@ -106,7 +108,7 @@ export const BusinessDetails = ({ userAvailable }) => {
       }).then((response) => {
 
         setLoading(false);
-
+     
         const updateDeatails = {
           ...userAvailable,
           business_name: response.data.data.data.name,
@@ -117,7 +119,12 @@ export const BusinessDetails = ({ userAvailable }) => {
           business_address: response.data.data.data.street,
           zip: response.data.data.data.zipcode,
           state: response.data.data.data.state,
-          country: response.data.data.data.country
+          country: response.data.data.data.country,
+          contact_first_name: response.data.data.data.owner,
+          contact_last_name: businessUpdateData.contact_last_name,
+          contact_email: businessUpdateData.contact_email,
+          contact_phone_number: businessUpdateData.contact_number,
+          business_description: businessUpdateData.business_discription
         }
 
         localStorage.setItem('user', JSON.stringify(updateDeatails));
@@ -147,10 +154,10 @@ export const BusinessDetails = ({ userAvailable }) => {
     }
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (name === 'business_emailaddress') {
       setEmailValid(emailRegex.test(value));
@@ -165,45 +172,89 @@ export const BusinessDetails = ({ userAvailable }) => {
       }))
     }
 
-    else if (name === 'contact_number' && value.length > 17) {
-      setContactNumberError('Contact number should not exceed 10 characters.');
+    else if (name === 'contact_number' ) {
+      if ( value.length > 14  ){
+        setContactNumberError('Contact number should not exceed 10 characters.');
 
-      setBusinessUpdatedata((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-    else if (name === 'business_phonenumber' && value.length > 17) {
-      setBusinessNumberError('Number should not exceed 10 characters.');
-      setBusinessUpdatedata((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    } else {
-      setBusinessNumberError('');
-      setContactNumberError('');
-
-      if (name === 'business_phonenumber') {
-        const re = /(\d{3})(\d{3})(\d{4})/;
-        const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
-        setBusinessUpdatedata((prev) => ({
-          ...prev,
-          [name]: output,
-        }));
-      } else if (name === 'contact_number') {
-        const re = /(\d{3})(\d{3})(\d{4})/;
-        const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
-        setBusinessUpdatedata((prev) => ({
-          ...prev,
-          [name]: output,
-        }));
-      }
-      else {
         setBusinessUpdatedata((prev) => ({
           ...prev,
           [name]: value,
         }));
+      }else{
+        setContactNumberError('');
+        const cleanedValue = value.replace(/\D/g, '');
+        let formattedValue = '';
+        if (cleanedValue.length <= 3) {
+          formattedValue = cleanedValue;
+        } else if (cleanedValue.length <= 6) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3)}`;
+        } else if (cleanedValue.length <= 10) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6)}`;
+        } else {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6, 10)}`;
+        }
+
+        setBusinessUpdatedata((prev) => ({
+          ...prev,
+          [name]: formattedValue,
+        }));
+
+
       }
+
+
+      //   const re = /(\d{3})(\d{3})(\d{4})/;
+      //   const output = value.replace(re, (_, a, b, c) => `(${a}) ${b}-${c}`);
+      //   setBusinessUpdatedata((prev) => ({
+      //     ...prev,
+      //     [name]: output,
+      //   }));
+      // }
+      
+     
+    }
+    else if (name === 'business_phonenumber') {
+      if (value.length > 14){
+        setBusinessNumberError('Number should not exceed 10 characters.');
+        setBusinessUpdatedata((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }else{
+        setBusinessNumberError('');
+
+        const cleanedValue = value.replace(/\D/g, '');
+
+        let formattedValue = '';
+        if (cleanedValue.length <= 3) {
+          formattedValue = cleanedValue;
+        } else if (cleanedValue.length <= 6) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3)}`;
+        } else if (cleanedValue.length <= 10) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6)}`;
+        } else {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6, 10)}`;
+        }
+
+        setBusinessUpdatedata((prev) => ({
+          ...prev,
+          [name]: formattedValue,
+        }));
+      
+
+        // const re = /(\d{3})(\d{3})(\d{4})/;
+        // const output = value.replace(re, (_, a, b, c) => `(${a}) ${b}-${c}`);
+        // setBusinessUpdatedata((prev) => ({
+        //   ...prev,
+        //   [name]: output,
+        // }));
+      }
+    
+    } else {
+        setBusinessUpdatedata((prev) => ({
+          ...prev,
+          [name]: value,
+        })); 
     }
   }
 
@@ -331,9 +382,12 @@ export const BusinessDetails = ({ userAvailable }) => {
 
             <div className='row mt-4 mb-5'>
               <div className="col-sm-12 col-xs-12 text-end">
-                <button className="orange_btn" type="submit">
+                <button className="btn btn-primary" type="submit">
                   {
-                    loading ? ('Loading...') : ('Save Changes')
+                    loading ? <>
+                      Save Changes
+                      <div class="spinner-border spinner-border-sm" role="status"> </div>
+                    </> : ('Save Changes')
                   }
                 </button>
               </div>

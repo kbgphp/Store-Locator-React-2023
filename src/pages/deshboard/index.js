@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom';
+import { country , states , citys } from "../../components/AddressData"
 
 
 import index_logo from "../../assets/images/index_logoleft.svg"
@@ -15,6 +16,7 @@ import Input from './components/Input';
 
 const Deshboard = () => {
 
+  
   const location = useLocation();
   const toast = useToast()
   const navigate = useNavigate();
@@ -37,6 +39,9 @@ const Deshboard = () => {
     business_city: '',
     business_zipcode: '',
     business_country: { country: '', code: '' },
+    business_country_sec: { country: '', code: '' },
+    business_state_sec: { country: '', code: '' },
+    business_city_sec: '',
     business_state: { state: '', code: '' },
     business_phone: '',
     website_url: '',
@@ -50,7 +55,11 @@ const Deshboard = () => {
     lss_id: '',
     keywords: ''
   });
- 
+
+  console.log('====================================');
+  console.log(businessDetails);
+  console.log('====================================');
+
   const InstanceId = JSON.parse(localStorage.getItem('instance_id'))
 
 
@@ -152,7 +161,7 @@ const Deshboard = () => {
   //   if (name === 'contact_number' && value.length > 10) {
   //     setContactNumberError('Contact number should not exceed 10 characters.');
   //   } else {
-      
+
   //     setContactNumberError('');
   //   }
 
@@ -184,12 +193,13 @@ const Deshboard = () => {
   //     }));
   //   }
 
-   
+
   // }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (name === 'business_email') {
       setEmailValid(emailRegex.test(value));
@@ -204,22 +214,72 @@ const Deshboard = () => {
         ...prev,
         [name]: value,
       }));
-    } else if (name === 'contact_number' && value.length > 17) {
-      setContactNumberError('Contact number should not exceed 10 characters.');
-      setBusinessDetails((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+    } else if (name === 'contact_number') {
+      if (value.length > 17){
+        setContactNumberError('Contact number should not exceed 10 characters.');
+        setBusinessDetails((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }else{
+        setContactNumberError('');
+        const cleanedValue = value.replace(/\D/g, '');
+        let formattedValue = '';
+        if (cleanedValue.length <= 3) {
+          formattedValue = cleanedValue;
+        } else if (cleanedValue.length <= 6) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3)}`;
+        } else if (cleanedValue.length <= 10) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6)}`;
+        } else {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6, 10)}`;
+        }
 
-    } else if (name === 'business_phone' && value.length > 17) {
-      setBusinessNumberError('Number should not exceed 10 characters.');
-      setBusinessDetails((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+        setBusinessDetails((prev) => ({
+          ...prev,
+          [name]: formattedValue,
+        }));
+      }
+     
+
+    } else if (name === 'business_phone') {
+
+      if (value.length > 14) {
+        setBusinessNumberError('Number should not exceed 10 characters.');
+        setBusinessDetails((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      } else {
+        setBusinessNumberError('');
+
+        const cleanedValue = value.replace(/\D/g, '');
+
+        let formattedValue = '';
+        if (cleanedValue.length <= 3) {
+          formattedValue = cleanedValue;
+        } else if (cleanedValue.length <= 6) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3)}`;
+        } else if (cleanedValue.length <= 10) {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6)}`;
+        } else {
+          formattedValue = `(${cleanedValue.slice(0, 3)})-${cleanedValue.slice(3, 6)}-${cleanedValue.slice(6, 10)}`;
+        }
+
+        setBusinessDetails((prev) => ({
+          ...prev,
+          [name]: formattedValue,
+        }));
+
+      }
+      // setBusinessNumberError('Number should not exceed 10 characters.');
+      // setBusinessDetails((prev) => ({
+      //   ...prev,
+      //   [name]: value,
+      // }));
     } else {
-      setBusinessNumberError(''); 
-      setContactNumberError(''); 
+      // setBusinessNumberError('');
+      // setContactNumberError('');
 
       if (name === 'business_country') {
         setBusinessDetails((prev) => ({
@@ -231,21 +291,16 @@ const Deshboard = () => {
           ...prev,
           business_state: { country: value, code: prev.business_state.code },
         }));
-      } else if (name === 'business_phone'){
-        const re = /(\d{3})(\d{3})(\d{4})/;
-        const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
-        setBusinessDetails((prev) => ({
-          ...prev,
-          [name]: output,
-        }));
-      } else if (name === 'contact_number') {
-        const re = /(\d{3})(\d{3})(\d{4})/;
-        const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
-        setBusinessDetails((prev) => ({
-          ...prev,
-          [name]: output,
-        }));
-      } else {
+      } 
+      // else if (name === 'business_phone') {
+      //   const re = /(\d{3})(\d{3})(\d{4})/;
+      //   const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
+      //   setBusinessDetails((prev) => ({
+      //     ...prev,
+      //     [name]: output,
+      //   }));
+      // }
+       else {
         setBusinessDetails((prev) => ({
           ...prev,
           [name]: value,
@@ -287,14 +342,14 @@ const Deshboard = () => {
 
   }
 
-  const handlereset = (e)=>{
+  const handlereset = (e) => {
     e.preventDefault();
     setActive('');
     setEmailValid(true);
     setcontactEmailValid(true)
     setValidated(false);
     setBusinessNumberError('');
-    setContactNumberError(''); 
+    setContactNumberError('');
     setBusinessDetails({
       business_name: '',
       business_address: '',
@@ -314,6 +369,26 @@ const Deshboard = () => {
       lss_id: '',
       keywords: ''
     });
+
+  }
+
+  const selectHandler = (e)=>{
+    const {value , name} = e.target;
+
+    if (name === 'business_country'){
+      setBusinessDetails((prev) => ({
+        ...prev, business_country_sec: { country: '', code: value },
+      }))
+    } else if (name === 'business_state'){
+      setBusinessDetails((prev) => ({
+        ...prev, business_state_sec: { country: '', code: value },
+      }))
+    } else if (name === 'business_city'){
+      setBusinessDetails((prev) => ({
+        ...prev, business_city_sec: value
+      }))
+    }
+
 
   }
 
@@ -383,6 +458,20 @@ const Deshboard = () => {
                     actas={Row} onChangeHandler={onChangeHandler}
                     isInvalid={validated && !businessDetails.business_city && true}
                   />
+                  {/* <Form.Select name='business_city'
+                    onChange={selectHandler}
+                  >
+                    <option>City</option>
+                    {
+                      citys.map((ele) => {
+                     
+                        return <>
+                          <option value={ele.name}>{ele.name}</option>
+                        </>
+                      })
+                    }
+                  </Form.Select> */}
+
                 </Col>
 
                 <Col>
@@ -401,12 +490,36 @@ const Deshboard = () => {
               <Row className='gx-5'>
 
                 <Col >
+                  {/* <Form.Select name='business_country' 
+                    onChange={selectHandler}
+                  >
+                    <option>Country</option>
+                    {
+                      country.map((ele)=>{
+                        return <>
+                          <option value={ele.code}>{ele.name}</option>
+                        </>
+                      })
+                    }
+    </Form.Select> */}
                   <Input placeholder={"Country"} actas={Row} name='business_country'
                     isInvalid={validated && !businessDetails.business_country.country && true}
                     value={businessDetails.business_country.country} onChangeHandler={onChangeHandler} />
                 </Col>
 
                 <Col >
+                  {/* <Form.Select name='business_state'
+                    onChange={selectHandler}
+                  >
+                    <option>States</option>
+                    {
+                      states.map((ele) => {
+                        return <>
+                          <option value={ele.code}>{ele.name}</option>
+                        </>
+                      })
+                    }
+                  </Form.Select> */}
                   <Input placeholder={"State"} actas={Row}
                     isInvalid={validated && !businessDetails.business_state.state && true}
                     name='business_state' value={businessDetails.business_state.state} onChangeHandler={onChangeHandler} />
@@ -416,8 +529,8 @@ const Deshboard = () => {
 
               <Input placeholder={"Business phone number"} name='business_phone'
                 isInvalid={validated && !businessDetails.business_phone && true}
-                value={businessDetails.business_phone} actas={Row} onChangeHandler={onChangeHandler} 
-                />
+                value={businessDetails.business_phone} actas={Row} onChangeHandler={onChangeHandler}
+              />
 
               {businessNumberError && <div className='text-danger'>{businessNumberError}</div>}
 
@@ -433,7 +546,7 @@ const Deshboard = () => {
                 value={businessDetails.business_email}
                 onChangeHandler={onChangeHandler}
               />
- 
+
               {!emailValid && (
                 <Form.Text className="text-danger">
                   Invalid email address.
@@ -457,11 +570,11 @@ const Deshboard = () => {
 
               <Input placeholder={"Contact email"}
                 isInvalid={validated && !businessDetails.contact_email && true}
-                name='contact_email' value={businessDetails.contact_email} actas={Row} onChangeHandler={onChangeHandler} 
-                
-                />
+                name='contact_email' value={businessDetails.contact_email} actas={Row} onChangeHandler={onChangeHandler}
 
-            
+              />
+
+
               {!contactemailValid && (
                 <Form.Text className="text-danger">
                   Invalid email address.
@@ -500,7 +613,10 @@ const Deshboard = () => {
               <div className='d-flex justify-content-end gap-3 deshboardBtnGroup' >
                 <button className='btn btn-secondary rounded-pill' onClick={handlereset}>Reset</button>
                 <button className='btn btn-primary rounded-pill' type="submit">
-                  {loading ? ('Loading...') : ('Get Listed!')}
+                  {loading ? (<>
+                    Get Listed!
+                    <div class="spinner-border spinner-border-sm" role="status"> </div>
+                  </>) : ('Get Listed!')}
                 </button>
               </div>
 

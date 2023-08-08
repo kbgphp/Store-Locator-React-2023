@@ -8,8 +8,6 @@ const Auth = () => {
   const [token , setToken] = useState('');
 
  
-
-
   useEffect(()=>{
     setToken(searchParams.get("token"))
   }, [searchParams])

@@ -1,13 +1,16 @@
 import Form from 'react-bootstrap/Form';
+import { Tooltip } from '@chakra-ui/react'
 
 
 
-function Input({ placeholder, actas,type='text', onChangeHandler, onBlurHandler, name, value, handleZipCode, isInvalid = false }) {
+function Input({ placeholder, tolltiptxt, actas,type='text', onChangeHandler, onBlurHandler, name, value, handleZipCode, isInvalid = false }) {
  
   
   return (
 
- 
+    <Tooltip placement='right-end' hasArrow arrowSize={10} label={isInvalid ? tolltiptxt :''} aria-label='A tooltip'>
+            
+       
       <Form.Group as={actas} md="4" className='required' controlId="validationCustom01" >
           <Form.Control
          
@@ -23,7 +26,7 @@ function Input({ placeholder, actas,type='text', onChangeHandler, onBlurHandler,
 
         </Form.Group>
         
-
+    </Tooltip>
   );
 }
 

@@ -5,6 +5,9 @@ import axios from "axios";
 import { useToast } from '@chakra-ui/react';
 import DeatailsCard from '../DeatailsCard';
 
+import { Tooltip } from '@chakra-ui/react'
+
+
 
 
 
@@ -71,12 +74,12 @@ export const BusinessDetails = ({ userAvailable }) => {
       || !businessUpdateData.business_country || !businessUpdateData.business_state || !businessUpdateData.business_zipcode
       || !businessUpdateData.business_phonenumber || !businessUpdateData.website_url || !businessUpdateData.business_emailaddress
       || !businessUpdateData.contact_first_name || !businessUpdateData.contact_last_name || !businessUpdateData.contact_email
-      || !businessUpdateData.contact_number ||  !businessUpdateData.business_category || !businessUpdateData.business_discription
+      || !businessUpdateData.contact_number || !businessUpdateData.business_category || !businessUpdateData.business_discription
     ) {
       setValidate(true)
       return;
     }
-    else if (businessNumberError || contactNumberError){
+    else if (businessNumberError || contactNumberError) {
       return
     }
 
@@ -105,9 +108,6 @@ export const BusinessDetails = ({ userAvailable }) => {
         business_description: businessUpdateData.business_discription
 
       }).then((response) => {
-
-        setLoading(false);
-     
         const updateDeatails = {
           ...userAvailable,
           business_name: response.data.data.data.name,
@@ -141,7 +141,7 @@ export const BusinessDetails = ({ userAvailable }) => {
 
       }).catch((error) => {
         console.log("error", error);
-        setLoading(false)
+
         toast({
           title: 'Something went wrong.',
           description: "Failed to Create.",
@@ -149,6 +149,8 @@ export const BusinessDetails = ({ userAvailable }) => {
           duration: 4000,
           isClosable: true,
         })
+      }).finally(() => {
+        setLoading(false)
       })
     }
   }
@@ -171,15 +173,15 @@ export const BusinessDetails = ({ userAvailable }) => {
       }))
     }
 
-    else if (name === 'contact_number' ) {
-      if ( value.length > 14  ){
+    else if (name === 'contact_number') {
+      if (value.length > 14) {
         setContactNumberError('Contact number should not exceed 10 characters.');
 
         setBusinessUpdatedata((prev) => ({
           ...prev,
           [name]: value,
         }));
-      }else{
+      } else {
         setContactNumberError('');
         const cleanedValue = value.replace(/\D/g, '');
         let formattedValue = '';
@@ -209,17 +211,17 @@ export const BusinessDetails = ({ userAvailable }) => {
       //     [name]: output,
       //   }));
       // }
-      
-     
+
+
     }
     else if (name === 'business_phonenumber') {
-      if (value.length > 14){
+      if (value.length > 14) {
         setBusinessNumberError('Number should not exceed 10 characters.');
         setBusinessUpdatedata((prev) => ({
           ...prev,
           [name]: value,
         }));
-      }else{
+      } else {
         setBusinessNumberError('');
 
         const cleanedValue = value.replace(/\D/g, '');
@@ -239,7 +241,7 @@ export const BusinessDetails = ({ userAvailable }) => {
           ...prev,
           [name]: formattedValue,
         }));
-      
+
 
         // const re = /(\d{3})(\d{3})(\d{4})/;
         // const output = value.replace(re, (_, a, b, c) => `(${a}) ${b}-${c}`);
@@ -248,18 +250,22 @@ export const BusinessDetails = ({ userAvailable }) => {
         //   [name]: output,
         // }));
       }
-    
+
     } else {
-        setBusinessUpdatedata((prev) => ({
-          ...prev,
-          [name]: value,
-        })); 
+      setBusinessUpdatedata((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   }
 
 
   return (
     <div>
+
+
+
+
 
       <DeatailsCard userAvailable={businessUpdateData} />
       <form onSubmit={handleSubmit}>
@@ -273,44 +279,67 @@ export const BusinessDetails = ({ userAvailable }) => {
 
             <div>
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.business_name} name='business_name' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_name ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business name" />
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_name ? 'name required' : ''}`} aria-label='A tooltip'>
+                  <input type="text"
+                    onChange={handleChange} value={businessUpdateData.business_name}
+                    name='business_name'
+                    className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_name ? 'is-invalid' : ''}`}
+                    id="colFormLabelSm" placeholder="Business name" />
+                </Tooltip>
+
+
               </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.business_address} name='business_address' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_address ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Address" />
-              </div>
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_address ? 'address required' : ''}`} aria-label='A tooltip'>
+                  <input type="text" onChange={handleChange} value={businessUpdateData.business_address} name='business_address' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_address ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Address" />
+                </Tooltip>       </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.business_city} name='business_city' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_city ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business City" />
-              </div>
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_city ? 'city required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.business_city} name='business_city' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_city ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business City" />
+                </Tooltip>           </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.business_country} name='business_country' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_country ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Country" />
-              </div>
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_country ? 'country required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.business_country} name='business_country' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_country ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Country" />
+                </Tooltip>      </div>
 
               <div className='row'>
                 <div className="col-sm-6 ">
-                  <input type="text" onChange={handleChange} value={businessUpdateData.business_state} name='business_state' className={`form-control form-control-sm forminput rounded-pill mt-3  ${validate && !businessUpdateData.business_state ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business State" />
-                </div>
+                  <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_state ? 'state required' : ''}`} aria-label='A tooltip'>
+
+                    <input type="text" onChange={handleChange} value={businessUpdateData.business_state} name='business_state' className={`form-control form-control-sm forminput rounded-pill mt-3  ${validate && !businessUpdateData.business_state ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business State" />
+                  </Tooltip>        </div>
 
                 <div className="col-sm-6 ">
-                  <input type="number" onChange={handleChange} value={businessUpdateData.business_zipcode} name='business_zipcode' className={`form-control form-control-sm forminput rounded-pill mt-3  ${validate && !businessUpdateData.business_zipcode ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business zipcode" />
-                </div>
+                  <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_zipcode ? 'zipcode required' : ''}`} aria-label='A tooltip'>
+
+                    <input type="number" onChange={handleChange} value={businessUpdateData.business_zipcode} name='business_zipcode' className={`form-control form-control-sm forminput rounded-pill mt-3  ${validate && !businessUpdateData.business_zipcode ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business zipcode" />
+                  </Tooltip>              </div>
               </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.business_phonenumber} name='business_phonenumber' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_phonenumber ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Phone number" />
-                {businessNumberError && <div className='text-danger'>{businessNumberError}</div>}
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_phonenumber ? 'phone required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.business_phonenumber} name='business_phonenumber' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_phonenumber ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Phone number" />
+                </Tooltip>    {businessNumberError && <div className='text-danger'>{businessNumberError}</div>}
 
               </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.website_url} name='website_url' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.website_url ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Website URL" />
-              </div>
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.website_url ? 'website url required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.website_url} name='website_url' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.website_url ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Website URL" />
+                </Tooltip>      </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.business_emailaddress} name='business_emailaddress' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_emailaddress ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Email Address" />
-                {!emailValid && (
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_emailaddress ? 'email required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.business_emailaddress} name='business_emailaddress' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_emailaddress ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Email Address" />
+                </Tooltip>          {!emailValid && (
                   <div className="text-danger">
                     Invalid email address.
                   </div>
@@ -332,16 +361,24 @@ export const BusinessDetails = ({ userAvailable }) => {
 
             <div>
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.contact_first_name} name='contact_first_name' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_first_name ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact first name" />
-              </div>
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.contact_first_name ? 'first name required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.contact_first_name} name='contact_first_name' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_first_name ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact first name" />
+                </Tooltip>          </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.contact_last_name} name='contact_last_name' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_last_name ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact last name" />
-              </div>
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.contact_last_name ? 'contact last required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.contact_last_name} name='contact_last_name' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_last_name ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact last name" />
+                </Tooltip>   </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.contact_email} name='contact_email' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_email ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact email" />
-                {!contactemailvalid && (
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.contact_email ? 'email required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.contact_email} name='contact_email' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_email ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact email" />
+                </Tooltip>  
+                
+                 {!contactemailvalid && (
                   <div className="text-danger">
                     Invalid email address.
                   </div>
@@ -349,12 +386,14 @@ export const BusinessDetails = ({ userAvailable }) => {
               </div>
 
               <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.contact_number} name='contact_number' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_number ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact Number" />
-                {contactNumberError && <div className='text-danger'>{contactNumberError}</div>}
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.contact_number ? 'number required' : ''}`} aria-label='A tooltip'>
+
+                  <input type="text" onChange={handleChange} value={businessUpdateData.contact_number} name='contact_number' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.contact_number ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Contact Number" />
+                </Tooltip>        {contactNumberError && <div className='text-danger'>{contactNumberError}</div>}
 
               </div>
 
-             
+
 
             </div>
 
@@ -365,16 +404,19 @@ export const BusinessDetails = ({ userAvailable }) => {
             <h3 className='formHeadings mt-5'><FaInfoCircle className='d-inline-block titleWicon' style={{ marginRight: "5px" }} />Additional Info.</h3>
             <div>
               <div className="col-sm-12 mb-4">
-                <input type="text" onChange={handleChange} value={businessUpdateData.business_category} name='business_category' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_category ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Category" />
-              </div>
+                <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_category ? 'category required' : ''}`} aria-label='A tooltip'>
 
-              <textarea onChange={handleChange} className={`form-control mt-2 mb-4 ${validate && !businessUpdateData.business_discription ? 'is-invalid' : ''}`} value={businessUpdateData.business_discription} style={{
-                minHeight: '150px',
-                resize: 'none',
-                overflow: 'hidden',
-                padding: '8px'
-              }} row="4" name="business_discription" placeholder="Business Description (max words 250)"></textarea>
+                  <input type="text" onChange={handleChange} value={businessUpdateData.business_category} name='business_category' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.business_category ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Business Category" />
+                </Tooltip>        </div>
+              <Tooltip placement='right-end' hasArrow arrowSize={10} label={`${validate && !businessUpdateData.business_discription ? 'description required' : ''}`} aria-label='A tooltip'>
 
+                <textarea onChange={handleChange} className={`form-control mt-2 mb-4 ${validate && !businessUpdateData.business_discription ? 'is-invalid' : ''}`} value={businessUpdateData.business_discription} style={{
+                  minHeight: '150px',
+                  resize: 'none',
+                  overflow: 'hidden',
+                  padding: '8px'
+                }} row="4" name="business_discription" placeholder="Business Description (max words 250)"></textarea>
+              </Tooltip>
             </div>
 
             <div className='row mt-4 mb-5'>
@@ -389,8 +431,6 @@ export const BusinessDetails = ({ userAvailable }) => {
                 </button>
               </div>
             </div>
-
-
 
 
           </div>

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom';
-import { country , states , citys } from "../../components/AddressData"
+import { country, states, citys } from "../../components/AddressData"
 import { useRef } from 'react';
 
 import index_logo from "../../assets/images/index_logoleft.svg"
@@ -14,9 +14,10 @@ import "./deshboard.scss"
 import Cards from './components/Cards';
 import Input from './components/Input';
 
+
 const Deshboard = () => {
 
-  
+
   const location = useLocation();
   const toast = useToast()
   const navigate = useNavigate();
@@ -219,13 +220,13 @@ const Deshboard = () => {
         [name]: value,
       }));
     } else if (name === 'contact_number') {
-      if (value.length > 17){
+      if (value.length > 17) {
         setContactNumberError('Contact number should not exceed 10 characters.');
         setBusinessDetails((prev) => ({
           ...prev,
           [name]: value,
         }));
-      }else{
+      } else {
         setContactNumberError('');
         const cleanedValue = value.replace(/\D/g, '');
         let formattedValue = '';
@@ -244,7 +245,7 @@ const Deshboard = () => {
           [name]: formattedValue,
         }));
       }
-     
+
 
     } else if (name === 'business_phone') {
 
@@ -293,9 +294,9 @@ const Deshboard = () => {
       } else if (name === 'business_state') {
         setBusinessDetails((prev) => ({
           ...prev,
-          business_state: { country: value, code: prev.business_state.code },
+          business_state: { state: value, code: prev.business_state.code },
         }));
-      } 
+      }
       // else if (name === 'business_phone') {
       //   const re = /(\d{3})(\d{3})(\d{4})/;
       //   const output = value.replace(re, (_, a, b, c) => `+1 (${a}) ${b}-${c}`);
@@ -304,7 +305,7 @@ const Deshboard = () => {
       //     [name]: output,
       //   }));
       // }
-       else {
+      else {
         setBusinessDetails((prev) => ({
           ...prev,
           [name]: value,
@@ -312,11 +313,6 @@ const Deshboard = () => {
       }
     }
   };
-
-
-
-
-
 
 
 
@@ -378,18 +374,18 @@ const Deshboard = () => {
 
   }
 
-  const selectHandler = (e)=>{
-    const {value , name} = e.target;
+  const selectHandler = (e) => {
+    const { value, name } = e.target;
 
-    if (name === 'business_country'){
+    if (name === 'business_country') {
       setBusinessDetails((prev) => ({
         ...prev, business_country_sec: { country: '', code: value },
       }))
-    } else if (name === 'business_state'){
+    } else if (name === 'business_state') {
       setBusinessDetails((prev) => ({
         ...prev, business_state_sec: { country: '', code: value },
       }))
-    } else if (name === 'business_city'){
+    } else if (name === 'business_city') {
       setBusinessDetails((prev) => ({
         ...prev, business_city_sec: value
       }))
@@ -446,13 +442,18 @@ const Deshboard = () => {
             <Col xs={12} className='mb-4 mt-4 d-flex flex-column gap-3 '>
               <h3> <IoIosBusiness style={{ display: "inline-block" }} />Business Details.</h3>
 
+
+
+
               <Input placeholder={"Business name"} actas={Row} name='business_name'
+                tolltiptxt={'name required'}
                 value={businessDetails.business_name}
                 onChangeHandler={onChangeHandler}
                 isInvalid={validated && !businessDetails.business_name && true}
               />
 
               <Input placeholder={"Enter your business address"} name='business_address'
+                tolltiptxt={'address required'}
                 value={businessDetails.business_address}
                 actas={Row}
                 onChangeHandler={onChangeHandler}
@@ -462,6 +463,7 @@ const Deshboard = () => {
               <Row className='gx-5'>
                 <Col>
                   <Input placeholder={"Enter your business city"} name='business_city'
+                    tolltiptxt={'city required'}
                     value={businessDetails.business_city}
                     actas={Row} onChangeHandler={onChangeHandler}
                     isInvalid={validated && !businessDetails.business_city && true}
@@ -484,6 +486,8 @@ const Deshboard = () => {
 
                 <Col>
                   <Input placeholder={"Enter your ZipCode"} name='business_zipcode'
+                    tolltiptxt={'zipcode required'}
+
                     type='number'
                     value={businessDetails.business_zipcode}
                     actas={Row} onChangeHandler={handleZipCode}
@@ -511,6 +515,7 @@ const Deshboard = () => {
                     }
     </Form.Select> */}
                   <Input placeholder={"Country"} actas={Row} name='business_country'
+                    tolltiptxt={'country required'}
                     isInvalid={validated && !businessDetails.business_country.country && true}
                     value={businessDetails.business_country.country} onChangeHandler={onChangeHandler} />
                 </Col>
@@ -529,6 +534,7 @@ const Deshboard = () => {
                     }
                   </Form.Select> */}
                   <Input placeholder={"State"} actas={Row}
+                    tolltiptxt={'state required'}
                     isInvalid={validated && !businessDetails.business_state.state && true}
                     name='business_state' value={businessDetails.business_state.state} onChangeHandler={onChangeHandler} />
                 </Col>
@@ -536,6 +542,7 @@ const Deshboard = () => {
               </Row>
 
               <Input placeholder={"Business phone number"} name='business_phone'
+                tolltiptxt={'phone required'}
                 isInvalid={validated && !businessDetails.business_phone && true}
                 value={businessDetails.business_phone} actas={Row} onChangeHandler={onChangeHandler}
               />
@@ -543,10 +550,13 @@ const Deshboard = () => {
               {businessNumberError && <div className='text-danger'>{businessNumberError}</div>}
 
               <Input placeholder={"Website URL"} name='website_url'
+                tolltiptxt={'website url required'}
+
                 isInvalid={validated && !businessDetails.website_url && true}
                 actas={Row} value={businessDetails.website_url} onChangeHandler={onChangeHandler} />
 
               <Input
+                tolltiptxt={'email required'}
                 placeholder={"Enter you business email"}
                 isInvalid={validated && !businessDetails.business_email && true}
                 name='business_email'
@@ -566,17 +576,21 @@ const Deshboard = () => {
             <Col xs={12} className='mb-4 d-flex flex-column gap-3'>
               <h3><FaInfoCircle style={{ display: "inline-block" }} />  Additional Information.</h3>
               <Input placeholder={"Contact first name"} name='contact_firstname'
+                tolltiptxt={'first name required'}
                 value={businessDetails.contact_firstname}
                 isInvalid={validated && !businessDetails.contact_firstname && true}
 
                 actas={Row} onChangeHandler={onChangeHandler} />
 
               <Input placeholder={"Contact last name"}
+                tolltiptxt={'last name required'}
+
                 name='contact_lastname' value={businessDetails.contact_lastname}
                 isInvalid={validated && !businessDetails.contact_lastname && true}
                 actas={Row} onChangeHandler={onChangeHandler} />
 
               <Input placeholder={"Contact email"}
+                tolltiptxt={'email required'}
                 isInvalid={validated && !businessDetails.contact_email && true}
                 name='contact_email' value={businessDetails.contact_email} actas={Row} onChangeHandler={onChangeHandler}
 
@@ -591,6 +605,7 @@ const Deshboard = () => {
 
 
               <Input placeholder={"Contact Number"}
+                tolltiptxt={'number required'}
                 isInvalid={validated && !businessDetails.contact_number && true}
                 type="text"
                 name='contact_number' value={businessDetails.contact_number} actas={Row} onChangeHandler={onChangeHandler} />
@@ -599,7 +614,7 @@ const Deshboard = () => {
 
               <Input placeholder={"Business Category:What do you do?(e.g 'shoes' or 'plumber'"}
                 isInvalid={validated && !businessDetails.business_catrgory && true}
-
+                tolltiptxt={'Business Category required'}
                 value={businessDetails.business_catrgory} actas={Row} name='business_catrgory' onChangeHandler={onChangeHandler} />
 
 

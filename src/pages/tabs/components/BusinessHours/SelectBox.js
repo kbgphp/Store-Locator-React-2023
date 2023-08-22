@@ -2,7 +2,7 @@
   import Form from 'react-bootstrap/Form';
 
 
-  const SelectBox = ({ handleBusinessHoursChange, name, disabled = false, isInvalid = false, value }) => {
+  const SelectBox = ({ handleBusinessHoursChange, name, disabled = false, isInvalid = false, value  , infdata}) => {
    
 
     const data = [
@@ -27,19 +27,22 @@
       { time: 'closed' }
     ]
 
+    const handleChange = (event) => {
+      handleBusinessHoursChange(event);
+    };
   
-
 
     return (
       <Form.Select 
-        // defaultValue={value === true ? 'closed' : ''}
-       aria-label="Default select example" isInvalid={isInvalid} onChange={handleBusinessHoursChange} name={name} disabled={disabled}>
-        <option value="">Select hours</option>
+        // defaultValue={infdata || data}
+        value={infdata}
+        aria-label="Default select example" isInvalid={isInvalid} onChange={handleChange} name={name} disabled={disabled}>
+    
         {data.map((item, index) => {
           return <option key={index} 
            value={item.time}
            >
-            {value === false ? 'closed' : item.time}
+            {value === false ? 'closed' : item.time }
             </option>;
         })}
       </Form.Select>

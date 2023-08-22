@@ -105,11 +105,11 @@ const Homepage = () => {
   useEffect(() => {
     console.log("useEffectdata", data?.data?.data)
     if (data?.data?.data?.data?.length > 0) {
-      navigate('/deshboard', { state: { apiData: data?.data?.data?.data } });
+      navigate('/dashboard', { state: { apiData: data?.data?.data?.data } });
     } else if (data?.data?.data?.data?.length < 0) {
-      navigate('/deshboard', { state: { apiData: "" } });
+      navigate('/dashboard', { state: { apiData: "" } });
     } else if (data?.data?.data){
-      navigate('/deshboard', { state: { apiData: "" } });
+      navigate('/dashboard', { state: { apiData: "" } });
     }
     else if (error) {
       toast({

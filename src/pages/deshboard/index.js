@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom';
 import { country , states , citys } from "../../components/AddressData"
-
+import { useRef } from 'react';
 
 import index_logo from "../../assets/images/index_logoleft.svg"
 import "./deshboard.scss"
@@ -20,6 +20,7 @@ const Deshboard = () => {
   const location = useLocation();
   const toast = useToast()
   const navigate = useNavigate();
+  const ref = useRef();
 
 
   const [cardData, setCardData] = useState([]);
@@ -56,9 +57,6 @@ const Deshboard = () => {
     keywords: ''
   });
 
-  console.log('====================================');
-  console.log(businessDetails);
-  console.log('====================================');
 
   const InstanceId = JSON.parse(localStorage.getItem('instance_id'))
 
@@ -79,7 +77,7 @@ const Deshboard = () => {
       return;
     } else {
       setLoading(true)
-      await axios.post('https://wix-store23-edef064ca37f.herokuapp.com/api/users/save', {
+      await axios.post(`${process.env.REACT_APP_BASE_URL}/api/users/save`, {
         name: businessDetails.business_name,
         city: businessDetails.business_city,
         street: businessDetails.business_address,
@@ -142,6 +140,12 @@ const Deshboard = () => {
       business_catrgory: '',
       business_comments: '',
     });
+
+
+
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
+
+
   }
 
 
@@ -314,6 +318,8 @@ const Deshboard = () => {
 
 
 
+
+
   const handleZipCode = async (event) => {
     const { name, value } = event.target;
 
@@ -392,6 +398,8 @@ const Deshboard = () => {
 
   }
 
+
+
   return (
     <section className='mt-4 d-flex '>
 
@@ -434,7 +442,7 @@ const Deshboard = () => {
               >We weren't able to locate your business.Please enter your details below</p>
           }
 
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} ref={ref}>
             <Col xs={12} className='mb-4 mt-4 d-flex flex-column gap-3 '>
               <h3> <IoIosBusiness style={{ display: "inline-block" }} />Business Details.</h3>
 
@@ -595,7 +603,7 @@ const Deshboard = () => {
                 value={businessDetails.business_catrgory} actas={Row} name='business_catrgory' onChangeHandler={onChangeHandler} />
 
 
-              <div class="row row-cols-md-4">
+              <div className="row row-cols-md-4">
                 <Form.Control
                   md="4"
                   as="textarea"
@@ -612,14 +620,13 @@ const Deshboard = () => {
 
               <div className='d-flex justify-content-end gap-3 deshboardBtnGroup' >
                 <button className='btn btn-secondary rounded-pill' onClick={handlereset}>Reset</button>
-                <button className='btn btn-primary rounded-pill' type="submit">
+                <button className='btn btn-primary rounded-pill' disabled={loading ? true : false} type="submit">
                   {loading ? (<>
                     Get Listed!
-                    <div class="spinner-border spinner-border-sm" role="status"> </div>
+                    <div className="spinner-border spinner-border-sm" role="status"> </div>
                   </>) : ('Get Listed!')}
                 </button>
               </div>
-
             </Col>
 
           </Form>

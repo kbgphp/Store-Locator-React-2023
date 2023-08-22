@@ -7,7 +7,7 @@ import axios from 'axios';
 const Tabs = () => {
 
   const [activetab, setActiveTab] = useState('VisibiltyReports');
-  console.log(">>",typeof activetab)
+  console.log(">>", typeof activetab)
   const [VisibilityData, setVisibilityData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ const Tabs = () => {
     };
 
     axios
-      .get('https://wix-store23-edef064ca37f.herokuapp.com/api/users/get_order/64a69ed35994208740aa6345/free', config)
+      .get(`${process.env.REACT_APP_BASE_URL}/api/users/get_order/64a69ed35994208740aa6345/free`, config)
       .then((res) => {
         setVisibilityData(res.data);
         setLoading(false);
@@ -103,6 +103,18 @@ const Tabs = () => {
     }
   }
 
+  const openBillingPage = () => {
+
+    const instence_id = window?.Wix?.Utils?.getInstanceId();
+
+    console.log("instence_id", instence_id);
+
+    console.log("redirect link ", `https://www.wix.com/apps/upgrade/${process.env.REACT_APP_WIX_APP_ID}?appInstanceId=${instence_id}`);
+
+    window.location.href = `https://www.wix.com/apps/upgrade/${process.env.REACT_APP_WIX_APP_ID}?appInstanceId=${instence_id}`
+  }
+
+
 
   return (
     <div className='TopContainer'>
@@ -110,7 +122,23 @@ const Tabs = () => {
       <header className='TabsHeader'>
         <div class="container">
           <div className='row justify-content-end'>
-            <div className='col-md-9'>  <img src={logoheader} alt="" style={{ height: "60px" }} /> </div>
+            <div className='col-md-9'>
+              <div className="row ">
+                <div className='col'>
+                  <img src={logoheader} alt="" style={{ height: "60px" }} />
+                </div>
+                <div className='col-auto'>
+                  <button className='btn btn-primary'
+                    onClick={openBillingPage}
+                   style={{ width: '180px'}}
+                   >Upgrade</button>
+                </div>
+              </div>
+            </div>
+
+
+
+
           </div>
         </div>
       </header>
@@ -120,7 +148,7 @@ const Tabs = () => {
 
           <div className='col-md-3 TabsContainer'>
             <ul className='asidbarTabs'>
-         
+
               <li><a onClick={() => setActiveTab('VisibiltyReports')} className={activetab === 'VisibiltyReports' && 'active'} >Visibilty Reports</a></li>
               <li><a onClick={() => setActiveTab('Citations')} className={activetab === 'Citations' && 'active'} >Citations</a></li>
               <li><a onClick={() => setActiveTab('BusinessDetails')} className={activetab === 'BusinessDetails' && 'active'}>Business Details</a></li>
@@ -141,7 +169,7 @@ const Tabs = () => {
 
         </div>
       </div>
-      
+
     </div>
   )
 }

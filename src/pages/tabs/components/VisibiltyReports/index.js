@@ -28,7 +28,7 @@ export const VisibiltyReports = ({ userAvailable, VisibilityData, loading, error
   //   }
 
 
-  //   axios.get('https://wix-store23-edef064ca37f.herokuapp.com/api/users/get_order/64a69ed35994208740aa6345/free', config).then((res) => {
+  //   axios.get(`${process.env.REACT_APP_BASE_URL}/api/users/get_order/64a69ed35994208740aa6345/free', config).then((res) => {
   //     setVisibilityData(res.data);
   //     setLoading(false)
 

@@ -27,7 +27,6 @@ export const BusinessDetails = ({ userAvailable }) => {
     contact_last_name: '',
     contact_email: '',
     contact_number: '',
-    position: '',
     business_category: '',
     business_discription: ''
   });
@@ -60,8 +59,7 @@ export const BusinessDetails = ({ userAvailable }) => {
       contact_email: userAvailable.contact_email,
       contact_number: userAvailable.contact_phone_number,
       business_discription: userAvailable.business_description,
-      position: '',
-      business_category: ''
+      business_category: userAvailable.category
     })
   }, [])
 
@@ -73,7 +71,7 @@ export const BusinessDetails = ({ userAvailable }) => {
       || !businessUpdateData.business_country || !businessUpdateData.business_state || !businessUpdateData.business_zipcode
       || !businessUpdateData.business_phonenumber || !businessUpdateData.website_url || !businessUpdateData.business_emailaddress
       || !businessUpdateData.contact_first_name || !businessUpdateData.contact_last_name || !businessUpdateData.contact_email
-      || !businessUpdateData.contact_number || !businessUpdateData.position || !businessUpdateData.business_category || !businessUpdateData.business_discription
+      || !businessUpdateData.contact_number ||  !businessUpdateData.business_category || !businessUpdateData.business_discription
     ) {
       setValidate(true)
       return;
@@ -98,7 +96,8 @@ export const BusinessDetails = ({ userAvailable }) => {
         notes: "test notes kk",
         country: businessUpdateData.business_country,
         owner: businessUpdateData.contact_first_name,
-        keyword1: "test key28",
+        keyword1: businessUpdateData.business_category,
+        category: businessUpdateData.business_category,
         contact_first_name: businessUpdateData.contact_first_name,
         contact_last_name: businessUpdateData.contact_last_name,
         contact_email: businessUpdateData.contact_email,
@@ -355,9 +354,7 @@ export const BusinessDetails = ({ userAvailable }) => {
 
               </div>
 
-              <div className="col-sm-12 ">
-                <input type="text" onChange={handleChange} value={businessUpdateData.position} name='position' className={`form-control form-control-sm forminput rounded-pill mt-3 ${validate && !businessUpdateData.position ? 'is-invalid' : ''}`} id="colFormLabelSm" placeholder="Position" />
-              </div>
+             
 
             </div>
 
@@ -382,7 +379,7 @@ export const BusinessDetails = ({ userAvailable }) => {
 
             <div className='row mt-4 mb-5'>
               <div className="col-sm-12 col-xs-12 text-end">
-                <button className="btn btn-primary" type="submit">
+                <button className="btn btn-primary" type="submit" disabled={loading ? true : false}>
                   {
                     loading ? <>
                       Save Changes

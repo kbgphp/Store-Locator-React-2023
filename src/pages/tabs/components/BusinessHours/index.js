@@ -177,7 +177,7 @@ export const BusinessHours = ({ userAvailable }) => {
       }
   };
 
-
+   
 
 
   return (
@@ -328,7 +328,7 @@ export const BusinessHours = ({ userAvailable }) => {
 
 
         <div className="col-12 text-end mt-4 mb-4">
-          <button className="btn btn-primary " disabled={false} onClick={handleSubmitHours}>{loading ? <>
+          <button className="btn btn-primary " disabled={loading ? true : false} onClick={handleSubmitHours}>{loading ? <>
             Save Changes
             <div class="spinner-border spinner-border-sm" role="status"> </div>
           </> : ('Save Changes')} </button>

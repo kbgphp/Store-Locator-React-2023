@@ -5,21 +5,26 @@ import axios from 'axios';
 import { useSearchParams } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useDataFetcher } from '../FetchData';
+import { useToast } from '@chakra-ui/react';
 
 
 import logo from "../../assets/images/logoleft-white.svg";
 import "./homepage.scss"
 
 
+
 const Homepage = () => {
 
   const navigate = useNavigate();
+  const toast = useToast();
   const [searchParams] = useSearchParams();
   const [accesstoken, setAccessToken] = React.useState('');
+  console.log("bahr token", accesstoken )
   const [instance_id, setInstance_id] = React.useState('');
 
-
-  const [loading, setLoading] = React.useState(false);
+  const { data, loading, error, fetchPostData } = useDataFetcher();
+ 
 
   useEffect(() => {
     setAccessToken(searchParams.get("code"));
@@ -27,16 +32,22 @@ const Homepage = () => {
   }, [searchParams]);
 
 
-  useEffect(() => {
-    const InstanceIdlocal = localStorage.getItem('instance_id');
-    if (!InstanceIdlocal) {
-      console.log("InstanceId in fun", InstanceIdlocal)
-      // const instence_id = window?.Wix?.Utils?.getInstanceId();
-      localStorage.setItem('instance_id', JSON.stringify(instance_id));
-    } else {
-    }
+ 
 
-  }, [instance_id]);
+  // useEffect(() => {
+
+  //   setTimeout(() => {
+  //     const instence_id = window?.Wix?.Utils?.getInstanceId();
+  //     console.log("instence_id", instence_id)
+  //     setInstance_id(instence_id);
+  //     localStorage.setItem('instance_id', JSON.stringify(instance_id));
+
+  //   }, 2000);
+
+
+  // }, [instance_id]);
+
+
 
   const formik = useFormik({
     initialValues: { businessText: '', zipcode: '' },
@@ -44,68 +55,122 @@ const Homepage = () => {
       businessText: Yup.string().min(1, 'Must be 2 characters').required('Required'),
       zipcode: Yup.string().matches(/^\d+$/, 'Must be a numeric value').min(5, 'Must be 5 characters or grater').max(5, 'Must be 5 characters or less').required('Required'),
     }),
-    onSubmit: async values => {
-      setLoading(true);
-      let config = {
-        headers: {
-          'x-auth-token': "@W#I$X7jlk8!%*dd%4",
-        }
-      }
-      let data = {
-        "search": values.businessText,
-        "zipcode": values.zipcode
-      }
-      await axios.post(`${process.env.REACT_APP_BASE_URL}/api/search_business`, data, config).then((response) => {
-        setLoading(false);
-        console.log("resss>>", response)
-        if (response.data.data.data.data.length > 0) {
-          navigate('/deshboard', { state: { apiData: response.data.data.data.data } });
-        } else {
-          navigate('/deshboard', { state: { apiData: "" } });
-        }
-      }).catch((error) => {
-        setLoading(false)
-        console.log("error", error)
-      })
+    onSubmit: (values) => { handleSubmit(values) }
 
 
-    },
+
+
+
+
+    // onSubmit: async values => {
+    //   setLoading(true);
+    //   let config = {
+    //     headers: {
+    //       'x-auth-token': "@W#I$X7jlk8!%*dd%4",
+    //     }
+    //   }
+    //   let data = {
+    //     "search": values.businessText,
+    //     "zipcode": values.zipcode
+    //   }
+    //   await axios.post(`${process.env.REACT_APP_BASE_URL}/api/search_business`, data, config).then((response) => {
+    //     setLoading(false);
+    //     console.log("resss>>", response)
+    //     if (response.data.data.data.data.length > 0) {
+    //       navigate('/deshboard', { state: { apiData: response.data.data.data.data } });
+    //     } else {
+    //       navigate('/deshboard', { state: { apiData: "" } });
+    //     }
+    //   }).catch((error) => {
+    //     setLoading(false)
+    //     console.log("error", error)
+    //   })
+
+
+    // },
   });
 
-  useEffect(() => {
-    let access_token = localStorage.getItem('access_token');
-    // let access_token = JSON.parse(localStorage.getItem('access_token')) ? JSON.parse(localStorage.getItem('access_token')) : '';
 
-    if (!access_token) {
-      axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken }).then((res) => {
+
+  const handleSubmit = (values) => {
+    let body = {
+      "search": values.businessText,
+      "zipcode": values.zipcode
+    };
+
+    fetchPostData(`${process.env.REACT_APP_BASE_URL}/api/search_business`, body);
+
+  }
+
+  useEffect(() => {
+    console.log("useEffectdata", data?.data?.data)
+    if (data?.data?.data?.data?.length > 0) {
+      navigate('/deshboard', { state: { apiData: data?.data?.data?.data } });
+    } else if (data?.data?.data?.data?.length < 0) {
+      navigate('/deshboard', { state: { apiData: "" } });
+    } else if (data?.data?.data){
+      navigate('/deshboard', { state: { apiData: "" } });
+    }
+    else if (error) {
+      toast({
+        title: 'Something Went Wrong.',
+        description: "Something Went Wrong From Server.",
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+
+  }, [data, error]) 
+
+
+  useEffect(() => {
+    
+    axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken, instance_id }).then((res) => {
+        console.log("res.data.refresh_token", res.data);
         localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
       }).catch((err) => {
         console.log("err  access error", err)
       });
-    }
-
+    
   }, [accesstoken])
 
 
 
   useEffect(() => {
-    check_user_exist();
+    // check_user_exist();
   }, []);
 
-  const check_user_exist = async () => {
+  // const check_user_exist = async () => {
+  //   const instence_id = window?.Wix?.Utils?.getInstanceId();
+  //   await axios.get(
+  //     `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
+  //     // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
+  //   ).then((res) => {
+  //     if (res.data.data.instance_id) {
+  //       navigate('/tabs')
+  //     }
+  //   }).catch((err) => {
+  //     console.log("err", err)
+  //   })
+  // }
 
-    const instence_id = window?.Wix?.Utils?.getInstanceId();
-    await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
-      // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
-    ).then((res) => {
-      if (res.data.data.instance_id) {
-        navigate('/tabs')
-      }
-    }).catch((err) => {
-      console.log("err", err)
-    })
-  }
+ 
+ 
+
+
+
+
+  useEffect(()=>{
+    if (accesstoken){
+      console.log("acess token in href ", accesstoken)
+      setTimeout(() => {
+        window.location.href = `https://www.wix.com/installer/close-window?access_token=${accesstoken}`
+      }, 2000);
+    }
+  }, [accesstoken])
+
+
 
   return (<section className='homepageSection'>
     <Container>
@@ -172,11 +237,11 @@ const Homepage = () => {
             </Row>
           </Col>
           <Col xs={12} md={5}>
-            <Button variant="primary rounded-pill" type='submit'>
+            <Button variant="primary rounded-pill" type='submit' disabled={loading ? true : false} >
               {loading ?
                 <>
                   Get Your Business Listed
-                  <div class="spinner-border spinner-border-sm" role="status"> </div>
+                  <div className="spinner-border spinner-border-sm" role="status"> </div>
                 </>
 
                 :
@@ -184,15 +249,20 @@ const Homepage = () => {
                 (' Get Your Business Listed')}
             </Button>
 
-            <Button onClick={() => window?.Wix?.Dashboard?.openBillingPage()} >
-              Open Billing Page
-            </Button>
+            
+
+
+
+
 
           </Col>
 
         </Row>
       </Form>
 
+  
+
+         
     </Container>
   </section>
   )

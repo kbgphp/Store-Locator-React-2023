@@ -16,6 +16,7 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
 
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [deletingIndex, setDeletingIndex] = React.useState(null);
+  console.log("businessImage>>", businessImage);
 
   const toast = useToast();
 
@@ -25,14 +26,19 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
 
 
   const handleURlChange = async (e) => {
+
+    const instence_id = window?.Wix?.Utils?.getInstanceId();
+
     const file = e.target.files[0];
     const formData = new FormData()
-    formData.append('image', file)
+    formData.append('image', file);
+
     let config = {
       headers: {
-        'auth-access-token': accesstoken,
+        instance_id: instence_id,
       }
     }
+
     setlogoLoader(true)
     await axios.post(`${process.env.REACT_APP_BASE_URL}/api/upload_logo/${user._id}`, formData, config).then((res) => {
       setlogoLoader(false);
@@ -58,12 +64,15 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
   }
 
   const handleBusinessChange = async (e) => {
+
+    const instence_id = window?.Wix?.Utils?.getInstanceId();
+
     const file = e.target.files[0];
     const formData = new FormData()
     formData.append('image', file)
     let config = {
       headers: {
-        'auth-access-token': accesstoken,
+        instance_id: instence_id,
       }
     }
     setImageLoading(true)
@@ -71,7 +80,7 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
       setImageLoading(false);
       console.log("ressss", res.data.data)
       const newImageData = {
-        _id: res.data.data.user_id,
+        _id: res.data.data._id,
         full_url: res.data.data.full_url,
       };
       setBusinessImage((prevImages) => [...prevImages, newImageData]);
@@ -98,12 +107,16 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
   }
 
   const handleDeleteImage = async (id, i) => {
+    console.log("id of delete image", id)
     setIsDeleting(true);
     setDeletingIndex(i)
 
     const delteditem = businessImage.filter((item) => { return item?._id !== id });
+    console.log("<deleteimg></deleteimg>", delteditem
+    )
 
     await axios.delete(`${process.env.REACT_APP_BASE_URL}/api/delete_photos/${id}`).then((res) => {
+      console.log(">>", res);
       setIsDeleting(false);
       if (res.data.data.acknowledged == true) {
         setBusinessImage(delteditem)
@@ -127,26 +140,33 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
 
         <div class="image-uploadBlock singalimgUpload">
           <label for="file-input">
-            <img src={damloadimg} alt='upload-img' />
+            <img src={damloadimg} alt='upload-img'  />
             <h5>Upload photo</h5>
           </label>
-          <input style={{ display: "none" }} id="file-input" type="file"
+          <input style={{ display: "none" }} id="file-input" type="file" accept="image/*"
             onChange={handleURlChange}
           />
         </div>
       </div>
+      {
+        logo || logoLoader &&
+        <div className='uploadedImgBlock'>
+          {
+            logoLoader ?
+              <div className="loadingBubble">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              : <img src={logo} alt='Business-logo' />
 
-      <div className='uploadedImgBlock'>
-        {
-          logoLoader ?
-            <div className="loadingBubble">
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            : <img src={logo} alt='Business-logo' />
-        }
-      </div>
+          }
+        </div>
+
+      }
+
+
+
 
       <div className='mt-5'>
         <h3 className='mb-4 formHeadings'>
@@ -160,7 +180,7 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
             <img src={damloadimg} alt='Business-photos' />
             <h5>Upload photos</h5>
           </label>
-          <input style={{ display: "none" }} id="file-input-photos" type="file"
+          <input style={{ display: "none" }} id="file-input-photos" type="file" accept="image/*"
             onChange={handleBusinessChange}
           />
 
@@ -170,11 +190,11 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
 
       <div className='mb-4 row'>
         {
-          businessImage.length > 0 && businessImage.map((img, index) => {
+          businessImage && businessImage?.length > 0 && businessImage.map((img, index) => {
             return <div className="col-sm-3" key={index}> <div className='uploadedImgBlock businessimgCard'>
               <img src={img.full_url} alt='business-img' />
               <div className='imgCloseButton'>
-                <img src={closeimg} alt='close-logo'
+                <img src={closeimg} alt='close-logo' 
                   onClick={() => handleDeleteImage(img._id, index)}
                 />
 

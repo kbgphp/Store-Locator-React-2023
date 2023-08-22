@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 
 const Auth = () => {
-
+  
   const [searchParams, setSearchParams] = useSearchParams();
   const [token , setToken] = useState('');
 
@@ -14,7 +14,7 @@ const Auth = () => {
 
   useEffect(()=>{
     if (token){
-      window.location.href = `https://www.wix.com/installer/install?token=${token}&appId=${process.env.REACT_APP_WIX_APP_ID}&redirectUrl=https://react-store-app-ab7535ec59b2.herokuapp.com/`
+      window.location.href = `https://www.wix.com/installer/install?token=${token}&appId=${process.env.REACT_APP_WIX_APP_ID}&redirectUrl=https://storelocatorfrontend.kloudexpert.com`
     }
   },[token])
 

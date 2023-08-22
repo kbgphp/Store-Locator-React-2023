@@ -116,7 +116,7 @@ export const ContactUs = ({ userAvailable }) => {
               </div>
             )}
 
-            <button className='btn btn-primary' type='submit'>{loading ? <>
+            <button className='btn btn-primary' type='submit' disabled={loading ? true : false}>{loading ? <>
               Send Email
               <div class="spinner-border spinner-border-sm" role="status"> </div>
             </> : ('Send Email')}</button>

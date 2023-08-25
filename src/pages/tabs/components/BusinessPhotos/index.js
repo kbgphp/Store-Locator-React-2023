@@ -9,6 +9,7 @@ import DeatailsCard from '../DeatailsCard';
 import damloadimg from "../../../../assets/images/download.svg"
 import closeimg from "../../../../assets/images/closeIcon.svg"
 import photoicon from "../../../../assets/images/imageIcon.svg"
+import dummyimg from "../../../../assets/images/dummyicon.png"
 import "./BusinessPhotos.scss"
 
 export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoading, logoLoader, setLogo, imageLoader, setlogoLoader, logo, businessImage }) => {
@@ -148,8 +149,7 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
           />
         </div>
       </div>
-      {
-        logo || logoLoader &&
+      
         <div className='uploadedImgBlock'>
           {
             logoLoader ?
@@ -158,12 +158,13 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
                 <div></div>
                 <div></div>
               </div>
-              : <img src={logo} alt='Business-logo' />
+            : <img src={logo ? logo :
+              dummyimg} alt='Business-logo' />
 
           }
         </div>
 
-      }
+      
 
 
 

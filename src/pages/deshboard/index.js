@@ -23,6 +23,7 @@ const Deshboard = () => {
   const navigate = useNavigate();
   const ref = useRef();
 
+  console.log("deshboard component", location.state.apiData)
 
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(false)
@@ -150,56 +151,7 @@ const Deshboard = () => {
   }
 
 
-  // const onChangeHandler = (event) => {
 
-  //   const { name, value } = event.target;
-
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  //   if (name === 'business_email') {
-  //     setEmailValid(emailRegex.test(value));
-  //   }
-  //   if (name === 'contact_email'){
-  //     setcontactEmailValid(emailRegex.test(value));
-  //   }
-
-  //   if (name === 'contact_number' && value.length > 10) {
-  //     setContactNumberError('Contact number should not exceed 10 characters.');
-  //   } else {
-
-  //     setContactNumberError('');
-  //   }
-
-  //   if (name === 'business_phone') {
-  //     console.log("reached every only business here>>")
-
-  //     setBusinessNumberError('number should not exceed 10 characters.');
-  //   } else {
-  //     setBusinessNumberError('');
-  //   }
-
-
-  //   if (name === 'business_country') {
-  //     setBusinessDetails((prev) => ({
-  //       ...prev,
-  //       business_country: { country: value, code: prev.business_country.code },
-  //     }));
-  //   } else if (name === 'business_state') {
-  //     setBusinessDetails((prev) => ({
-  //       ...prev,
-  //       business_state: { country: value, code: prev.business_state.code },
-  //     }));
-  //   }
-  //   else {
-  //     console.log("reached every time here>>")
-  //     setBusinessDetails((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
-  //   }
-
-
-  // }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -374,6 +326,8 @@ const Deshboard = () => {
 
   }
 
+
+  //use if you want to select box instant of autofill zip-code 
   const selectHandler = (e) => {
     const { value, name } = e.target;
 

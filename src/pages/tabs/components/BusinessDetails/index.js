@@ -108,6 +108,7 @@ export const BusinessDetails = ({ userAvailable }) => {
         business_description: businessUpdateData.business_discription
 
       }).then((response) => {
+        console.log("res",response.data.data)
         const updateDeatails = {
           ...userAvailable,
           business_name: response.data.data.data.name,
@@ -123,7 +124,9 @@ export const BusinessDetails = ({ userAvailable }) => {
           contact_last_name: businessUpdateData.contact_last_name,
           contact_email: businessUpdateData.contact_email,
           contact_phone_number: businessUpdateData.contact_number,
-          business_description: businessUpdateData.business_discription
+          business_description: businessUpdateData.business_discription,
+          category: response.data.data.data.keyword1
+          // keyword1
         }
 
         localStorage.setItem('user', JSON.stringify(updateDeatails));

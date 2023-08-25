@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useSearchParams } from 'react-router-dom'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useDataFetcher } from '../FetchData';
+import { useDataFetcher } from '../../components/FetchData';
 import { useToast } from '@chakra-ui/react';
 
 
@@ -20,11 +20,11 @@ const Homepage = () => {
   const toast = useToast();
   const [searchParams] = useSearchParams();
   const [accesstoken, setAccessToken] = React.useState('');
-  console.log("bahr token", accesstoken )
+
   const [instance_id, setInstance_id] = React.useState('');
 
   const { data, loading, error, fetchPostData } = useDataFetcher();
- 
+
 
   useEffect(() => {
     setAccessToken(searchParams.get("code"));
@@ -32,7 +32,8 @@ const Homepage = () => {
   }, [searchParams]);
 
 
- 
+
+// when
 
   // useEffect(() => {
 
@@ -108,7 +109,7 @@ const Homepage = () => {
       navigate('/dashboard', { state: { apiData: data?.data?.data?.data } });
     } else if (data?.data?.data?.data?.length < 0) {
       navigate('/dashboard', { state: { apiData: "" } });
-    } else if (data?.data?.data){
+    } else if (data?.data?.data) {
       navigate('/dashboard', { state: { apiData: "" } });
     }
     else if (error) {
@@ -121,18 +122,18 @@ const Homepage = () => {
       })
     }
 
-  }, [data, error]) 
+  }, [data, error])
 
 
   useEffect(() => {
-    
+
     axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken, instance_id }).then((res) => {
-        console.log("res.data.refresh_token", res.data);
-        localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
-      }).catch((err) => {
-        console.log("err  access error", err)
-      });
-    
+      console.log("res.data.refresh_token", res.data);
+      localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
+    }).catch((err) => {
+      console.log("err  access error", err)
+    });
+
   }, [accesstoken])
 
 
@@ -141,29 +142,28 @@ const Homepage = () => {
     // check_user_exist();
   }, []);
 
-  // const check_user_exist = async () => {
-  //   const instence_id = window?.Wix?.Utils?.getInstanceId();
-  //   await axios.get(
-  //     `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
-  //     // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
-  //   ).then((res) => {
-  //     if (res.data.data.instance_id) {
-  //       navigate('/tabs')
-  //     }
-  //   }).catch((err) => {
-  //     console.log("err", err)
-  //   })
-  // }
-
- 
- 
+  const check_user_exist = async () => {
+    const instence_id = window?.Wix?.Utils?.getInstanceId();
+    await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/${instence_id}`
+      // `${process.env.REACT_APP_BASE_URL}/api/users/check_users_exists/5e6938f2-5475-493f-900d-e54b29dce51c`
+    ).then((res) => {
+      if (res.data.data.instance_id) {
+        navigate('/tabs')
+      }
+    }).catch((err) => {
+      console.log("err", err)
+    })
+  }
 
 
 
 
-  useEffect(()=>{
-    if (accesstoken){
-      console.log("acess token in href ", accesstoken)
+
+
+
+  useEffect(() => {
+    if (accesstoken) {
       setTimeout(() => {
         window.location.href = `https://www.wix.com/installer/close-window?access_token=${accesstoken}`
       }, 2000);
@@ -249,20 +249,15 @@ const Homepage = () => {
                 (' Get Your Business Listed')}
             </Button>
 
-            
-
-
-
-
 
           </Col>
 
         </Row>
       </Form>
 
-  
 
-         
+
+
     </Container>
   </section>
   )

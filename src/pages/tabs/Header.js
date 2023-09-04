@@ -5,7 +5,6 @@ const Header = () => {
 
   const openBillingPage = () => {
     const instence_id = window?.Wix?.Utils?.getInstanceId();
-
     const url = `https://www.wix.com/apps/upgrade/${process.env.REACT_APP_WIX_APP_ID}?appInstanceId=${instence_id}`;
     window.open(url, '_blank');
 

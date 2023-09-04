@@ -15,7 +15,7 @@ const useDataFetcher = () => {
 
     try {
       const response = await axios.get(url);
-      console.log("ress>>",response)
+      
       // const jsonData = await response.json();
       setData(response);
     } catch (err) {
@@ -39,7 +39,7 @@ const useDataFetcher = () => {
   
     try {
       const response = await axios.post(url , body , config);
-      console.log("ress>>",response)
+    
       // const jsonData = await response.json();
       setData(response.data);
     } catch (err) {

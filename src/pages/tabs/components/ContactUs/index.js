@@ -61,7 +61,6 @@ export const ContactUs = ({ userAvailable }) => {
         }
       ).then((response) => {
         setLoading(false);
-        console.log(response)
         if (response.data.data) {
           setValidated(false)
           setContactusFields({ business_name: '', business_email: '', business_comment: '' })

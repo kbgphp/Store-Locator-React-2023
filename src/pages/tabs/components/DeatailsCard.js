@@ -2,6 +2,8 @@ import React from 'react'
 
 const DeatailsCard = ({ userAvailable }) => {
 
+  console.log("render on everytime")
+
   return (
     <div className='card deatailsCard mb-4' >
       <div style={{ margin: "20px 25px" }}>

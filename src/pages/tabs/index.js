@@ -4,18 +4,10 @@ import Header from './Header';
 
 
 const Tabs = () => {
-
- 
-
-
-
   return (
     <div className='TopContainer'>
-
-      <Header/>
+      <Header />
       <Tabpage />
-      
-
     </div>
   )
 }

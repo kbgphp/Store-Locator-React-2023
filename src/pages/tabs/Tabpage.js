@@ -67,13 +67,9 @@ const Tabpage = () => {
   const getPhotoDetails = async () => {
     setImageLoading(true)
     await axios.get(`${process.env.REACT_APP_BASE_URL}/api/userPhotos/${userAvailable._id}`).then((res) => {
-      console.log("res.data.data", res.data.data);
-
       setBusinessImage(res.data.data);
-
-
       setImageLoading(false)
-      console.log("res", res.data)
+   
     }).catch((err) => {
       console.log("err".err);
       setImageLoading(false)

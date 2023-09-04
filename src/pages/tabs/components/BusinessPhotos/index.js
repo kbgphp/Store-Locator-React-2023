@@ -17,7 +17,7 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
 
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [deletingIndex, setDeletingIndex] = React.useState(null);
-  console.log("businessImage>>", businessImage);
+  
 
   const toast = useToast();
 
@@ -79,7 +79,6 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
     setImageLoading(true)
     await axios.post(`${process.env.REACT_APP_BASE_URL}/api/upload_photos/${user._id}`, formData, config).then((res) => {
       setImageLoading(false);
-      console.log("ressss", res.data.data)
       const newImageData = {
         _id: res.data.data._id,
         full_url: res.data.data.full_url,
@@ -108,16 +107,13 @@ export const BusinessPhotos = ({ userAvailable, setBusinessImage, setImageLoadin
   }
 
   const handleDeleteImage = async (id, i) => {
-    console.log("id of delete image", id)
     setIsDeleting(true);
     setDeletingIndex(i)
 
     const delteditem = businessImage.filter((item) => { return item?._id !== id });
-    console.log("<deleteimg></deleteimg>", delteditem
-    )
+  
 
     await axios.delete(`${process.env.REACT_APP_BASE_URL}/api/delete_photos/${id}`).then((res) => {
-      console.log(">>", res);
       setIsDeleting(false);
       if (res.data.data.acknowledged == true) {
         setBusinessImage(delteditem)

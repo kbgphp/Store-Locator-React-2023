@@ -18,7 +18,7 @@ export const BusinessHours = ({ userAvailable }) => {
     sunday: { open: 'closed', close: 'closed' },
   });
 
-  console.log(",businessHoursState",businessHoursState)
+
 
 
   const [isChecked, setIsChecked] = useState({

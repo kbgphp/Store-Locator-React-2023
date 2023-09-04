@@ -19,8 +19,8 @@ const Homepage = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const [searchParams] = useSearchParams();
+  
   const [accesstoken, setAccessToken] = React.useState('');
-
   const [instance_id, setInstance_id] = React.useState('');
 
   const { data, loading, error, fetchPostData } = useDataFetcher();
@@ -33,7 +33,7 @@ const Homepage = () => {
 
 
 
-// when
+  // when
 
   // useEffect(() => {
 
@@ -58,37 +58,6 @@ const Homepage = () => {
     }),
     onSubmit: (values) => { handleSubmit(values) }
 
-
-
-
-
-
-    // onSubmit: async values => {
-    //   setLoading(true);
-    //   let config = {
-    //     headers: {
-    //       'x-auth-token': "@W#I$X7jlk8!%*dd%4",
-    //     }
-    //   }
-    //   let data = {
-    //     "search": values.businessText,
-    //     "zipcode": values.zipcode
-    //   }
-    //   await axios.post(`${process.env.REACT_APP_BASE_URL}/api/search_business`, data, config).then((response) => {
-    //     setLoading(false);
-    //     console.log("resss>>", response)
-    //     if (response.data.data.data.data.length > 0) {
-    //       navigate('/deshboard', { state: { apiData: response.data.data.data.data } });
-    //     } else {
-    //       navigate('/deshboard', { state: { apiData: "" } });
-    //     }
-    //   }).catch((error) => {
-    //     setLoading(false)
-    //     console.log("error", error)
-    //   })
-
-
-    // },
   });
 
 
@@ -104,7 +73,7 @@ const Homepage = () => {
   }
 
   useEffect(() => {
-    console.log("useEffectdata", data?.data?.data)
+
     if (data?.data?.data?.data?.length > 0) {
       navigate('/dashboard', { state: { apiData: data?.data?.data?.data } });
     } else if (data?.data?.data?.data?.length < 0) {
@@ -128,7 +97,7 @@ const Homepage = () => {
   useEffect(() => {
 
     axios.post(`${process.env.REACT_APP_BASE_URL}/api/get_access_token`, { authToken: accesstoken, instance_id }).then((res) => {
-      console.log("res.data.refresh_token", res.data);
+
       localStorage.setItem('access_token', JSON.stringify(res.data.refresh_token));
     }).catch((err) => {
       console.log("err  access error", err)
@@ -242,11 +211,7 @@ const Homepage = () => {
                 <>
                   Get Your Business Listed
                   <div className="spinner-border spinner-border-sm" role="status"> </div>
-                </>
-
-                :
-
-                (' Get Your Business Listed')}
+                </> : (' Get Your Business Listed')}
             </Button>
 
 
@@ -254,8 +219,6 @@ const Homepage = () => {
 
         </Row>
       </Form>
-
-
 
 
     </Container>

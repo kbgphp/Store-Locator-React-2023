@@ -4,8 +4,8 @@ import Layout from "./components/Layout/Layout";
 import Tabs from "./pages/tabs";
 import Deshboard from "./pages/deshboard";
 import Auth from "./pages/Authorization";
-import PageNotFound from "../src/components/404 Page"
-import Test from "./components/Test";
+import PageNotFound from "./pages/404 Page"
+
 
 function App() {
 
@@ -17,13 +17,12 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/dashboard" element={<Deshboard />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/test" element={< Test />} />
-
-        <Route path="*" element={<PageNotFound/>} />
+        <Route path="*" element={<PageNotFound />} />
 
         <Route element={<Layout />} >
-          <Route path="/tabs" element={<Tabs/>} />
+          <Route path="/tabs" element={<Tabs />} />
         </Route>
+        
       </Routes>
     </>
   );

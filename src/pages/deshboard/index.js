@@ -23,7 +23,6 @@ const Deshboard = () => {
   const navigate = useNavigate();
   const ref = useRef();
 
-  console.log("deshboard component", location.state.apiData)
 
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(false)
@@ -34,6 +33,8 @@ const Deshboard = () => {
   const [contactemailValid, setcontactEmailValid] = useState(true);
   const [contactNumberError, setContactNumberError] = useState('');
   const [businessNumberError, setBusinessNumberError] = useState('')
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
   const [businessDetails, setBusinessDetails] = useState({
@@ -98,7 +99,6 @@ const Deshboard = () => {
         notes: businessDetails.business_comments,
         instance_id: InstanceId
       }).then((response) => {
-        console.log("res", response.data)
         setLoading(false);
         if (response?.data?.data[0] && response?.data?.data[0].message !== '') {
           toast({
@@ -142,18 +142,8 @@ const Deshboard = () => {
       business_catrgory: '',
       business_comments: '',
     });
-
-
-
     ref.current?.scrollIntoView({ behavior: 'smooth' });
-
-
   }
-
-
-
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -265,8 +255,6 @@ const Deshboard = () => {
       }
     }
   };
-
-
 
   const handleZipCode = async (event) => {
     const { name, value } = event.target;
@@ -395,8 +383,6 @@ const Deshboard = () => {
           <Form onSubmit={handleSubmit} ref={ref}>
             <Col xs={12} className='mb-4 mt-4 d-flex flex-column gap-3 '>
               <h3> <IoIosBusiness style={{ display: "inline-block" }} />Business Details.</h3>
-
-
 
 
               <Input placeholder={"Business name"} actas={Row} name='business_name'
